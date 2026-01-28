@@ -9,19 +9,33 @@ public class SimulationPanel extends JPanel {
     private List<Vehicles> vehicles = new ArrayList<>();
 
     public SimulationPanel() {
+
         setBackground(new Color(150, 150, 150)); // Gray background
         setPreferredSize(new Dimension(1000, 800));
 
-        roads.add(new Road(100, 400, Orientation.HORIZONTAL, Approach.SOUTH, 600, 200, 2, 200));
-        roads.add(new Road(900, 400, Orientation.HORIZONTAL, Approach.NORTH, 600, 200, 2, -200));
+        //create road object
+        Road road1 = new Road(100, 400, Orientation.HORIZONTAL, Approach.SOUTH, 600, 200, 2, 200);
+        Road road2 = new Road(900, 400, Orientation.HORIZONTAL, Approach.NORTH, 600, 200, 2, -200);
+        Road road3 = new Road(500, 750, Orientation.VERTICAL, Approach.EAST, 500, 200, 2, -200);
+        Road road4 = new Road(500, 50, Orientation.VERTICAL, Approach.WEST, 500, 200, 2, -200);
 
-        roads.add(new Road(500, 750, Orientation.VERTICAL, Approach.EAST, 500, 200, 2, -200));
-        roads.add(new Road(500, 750, Orientation.VERTICAL, Approach.EAST, 500, 200, 2, -200));
 
-        vehicles.add(new Vehicles(Orientation.HORIZONTAL, 500, 320, 40, 30, 2, 0));
-        vehicles.add(new Vehicles(Orientation.VERTICAL, 500, 150, 40, 30, 2, 0));
+        roads.add(road1);
+        roads.add(road2);
+        roads.add(road3);
+        roads.add(road4);
 
-        trafficLights.add(new TrafficLight(300, 250, Approach.SOUTH, LightState.RED, 5000, 2000, 5000));
+        //create vehicle obeject 
+        Vehicles car1 = new Vehicles(Orientation.HORIZONTAL, 500, 320, 40, 30, 2, 0);
+        Vehicles car2 = new Vehicles(Orientation.VERTICAL, 500, 150, 40, 30, 2, 0);
+
+        vehicles.add(car1);
+        vehicles.add(car2);
+
+
+        //create traffic light object
+        TrafficLight light1 = new TrafficLight(300, 250, LightState.RED, 5000, 2000, 5000);
+        trafficLights.add(light1);
 
         // Start animation timer
         Timer timer = new Timer(30, e -> {
@@ -36,9 +50,9 @@ public class SimulationPanel extends JPanel {
         for (TrafficLight light : trafficLights) {
             light.update(30);
         }
-        // Update vehicle positions
-        vehicles.get(0).update(getWidth(), getHeight(), Orientation.HORIZONTAL);
-        vehicles.get(1).update(getWidth(), getHeight(), Orientation.VERTICAL);
+        // make each vehicle move by calling move method
+        vehicles.get(0).move(getWidth(), getHeight(), Orientation.HORIZONTAL);
+        vehicles.get(1).move(getWidth(), getHeight(), Orientation.VERTICAL);
     }
 
     @Override

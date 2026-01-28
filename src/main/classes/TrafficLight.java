@@ -1,3 +1,11 @@
+// change some int to float
+// create a class for object that interact with each other
+// preset all vehicle type 
+// seperate inanimated and animated object
+// goal : have two or three object interact with each other
+// goal : refactor the code
+// ** explain the concept of OOP in this project more clearly **
+
 
 enum LightState {
     RED,
@@ -5,17 +13,14 @@ enum LightState {
     GREEN
 }
 public class TrafficLight {
-    int x,y;
-    Approach approach;
+    Coordinate position;
     LightState state;
-    int greenMs, yellowMs, redMs;
-    int elapsedMs = 0;
-    
-    public TrafficLight(int x, int y, Approach approach, LightState initialState, int greenMs, int yellowMs, int redMs) {
-        this.x = x;
-        this.y = y;
-        this.approach = approach;
-        this.state = initialState;
+    float greenMs, yellowMs, redMs;
+    float elapsedMs = 0;
+
+    TrafficLight(Coordinate position, LightState state, float greenMs, float yellowMs, float redMs) {
+        this.position = position;
+        this.state = state;
         this.greenMs = greenMs;
         this.yellowMs = yellowMs;
         this.redMs = redMs;

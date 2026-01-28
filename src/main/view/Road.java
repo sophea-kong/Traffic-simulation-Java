@@ -26,7 +26,7 @@ public class Road {
     Color stopLineColor = new Color(255, 235, 235);
     Color crosColor = new Color(255, 235, 235);
 
-    public Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
+    Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
             int laneCount, int stopLineOffset) {
         this.cx = cx;
         this.cy = cy;
