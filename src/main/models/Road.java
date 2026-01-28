@@ -9,6 +9,7 @@ enum Approach {
 }
 
 public class Road {
+
     final int cx, cy;
 
     final Orientation orientation;
@@ -18,7 +19,6 @@ public class Road {
     final int roadWidth;
     final int laneCount;
     final int stopLineOffset;
-    final boolean hasStopLine = true;
 
 
     final Color asphaltColor = new Color(60, 60, 60);
