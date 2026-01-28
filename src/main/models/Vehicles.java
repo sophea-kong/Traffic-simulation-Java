@@ -1,3 +1,5 @@
+
+
 public class Vehicles{
     int x;
     int y;
@@ -5,8 +7,11 @@ public class Vehicles{
     int height;
     int speed;
     int lane;
+    Orientation orientation;
+    
 
-    public Vehicles(int x, int y, int width, int height, int speed, int lane) {
+    public Vehicles(Orientation orientation, int x, int y, int width, int height, int speed, int lane) {
+        this.orientation = orientation;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -15,10 +20,17 @@ public class Vehicles{
         this.lane = lane;
     }
 
-    public void update(int windowsWidth) {
-        x += speed;
-        if(x > windowsWidth) {
-            x = -width;
+    public void update(int windowsWidth, int windowHeight, Orientation orientation) {
+        if (orientation == Orientation.VERTICAL) {
+            y += speed;
+            if (y > windowHeight) {
+                y = -height;
+            }
+        } else {
+            x += speed;
+            if (x > windowsWidth) {
+                x = -width;
+            }
         }
     }
 }

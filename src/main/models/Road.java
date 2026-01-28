@@ -17,7 +17,6 @@ public class Road {
     final int lenght;
     final int roadWidth;
     final int laneCount;
-    final int intersectionSize;
     final int stopLineOffset;
     final boolean hasStopLine = true;
 
@@ -28,7 +27,7 @@ public class Road {
     final Color crosColor = new Color(255, 235, 235);
 
     public Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
-            int laneCount, int intersectionSize, int stopLineOffset) {
+            int laneCount, int stopLineOffset) {
         this.cx = cx;
         this.cy = cy;
         this.orientation = orientation;
@@ -36,7 +35,6 @@ public class Road {
         this.lenght = lenght;
         this.roadWidth = roadWidth;
         this.laneCount = laneCount;
-        this.intersectionSize = intersectionSize;
         this.stopLineOffset = stopLineOffset;
     }
 }
