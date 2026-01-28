@@ -1,34 +1,36 @@
+import java.awt.Color;
 
+enum Orientation {
+    HORIZONTAL, VERTICAL
+}
 
-public class Vehicles{
-    Coordinate position;
-    float width;
-    float height;
-    float  speed;
-    int lane;
+enum Approach {
+    NORTH, SOUTH, EAST, WEST
+}
+
+public class Road {
+    Coordinate position;   
     Orientation orientation;
+    Approach approach;
+    int lenght;
+    int roadWidth;
+    int laneCount;
+    int stopLineOffset;
 
-    Vehicles(Orientation orientation, int x, int y, float width, float height, float speed, int lane) {
-        this.orientation = orientation;
+    // colors
+    Color asphaltColor = new Color(60, 60, 60);
+    Color laneMark = new Color(255, 255, 255);
+    Color stopLineColor = new Color(255, 235, 235);
+    Color crosColor = new Color(255, 235, 235);
+
+    Road(int x, int y, Orientation orientation, Approach approach, int lenght, int roadWidth,
+            int laneCount, int stopLineOffset) {
         this.position = new Coordinate(x, y);
-        this.width = width;
-        this.height = height;
-        this.speed = validate_speed(speed);
-        this.lane = lane;
-    }
-
-    public void move(int windowsWidth, int windowHeight, Orientation orientation) {
-        
-    }
-
-    private int validate_speed(int pspeed){
-        if (pspeed < 0){
-            pspeed =  -pspeed;
-        }
-        // speed limit
-        if (pspeed > 200){
-            pspeed = 199;
-        }
-        return pspeed;
+        this.orientation = orientation;
+        this.approach = approach;
+        this.lenght = lenght;
+        this.roadWidth = roadWidth;
+        this.laneCount = laneCount;
+        this.stopLineOffset = stopLineOffset;
     }
 }

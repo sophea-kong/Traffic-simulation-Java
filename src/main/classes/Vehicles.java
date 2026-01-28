@@ -2,11 +2,11 @@ public class Vehicles{
     Coordinate position;
     float width;
     float height;
-    int speed;
+    float speed;
     int lane;
     Orientation orientation;
 
-    public Vehicles(Orientation orientation, float x, float y, float width, float height, int speed, int lane) {
+    public Vehicles(Orientation orientation, float x, float y, float width, float height, float speed, int lane) {
         this.orientation = orientation;
         this.position = new Coordinate(x, y);
         this.width = width;
@@ -16,13 +16,14 @@ public class Vehicles{
     }
     
     public void move(int windowWidth, int windowHeight) {
-    if (orientation == Orientation.HORIZONTAL) {
-        position.translate(speed, 0);
-    } else {
-        position.translate(0, speed);
+        if (orientation == Orientation.HORIZONTAL) {
+            position.translate(speed, 0);
+        } else {
+            position.translate(0, speed);
+        }
     }
-
-    private int validateSpeed(int pspeed){
+    
+    private float validateSpeed(float pspeed){
         if (pspeed < 0){
             pspeed =  -pspeed;
         }
