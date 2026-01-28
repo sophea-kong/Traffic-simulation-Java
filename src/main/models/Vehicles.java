@@ -16,7 +16,7 @@ public class Vehicles{
         this.y = y;
         this.width = width;
         this.height = height;
-        this.speed = speed;
+        this.speed = validate_speed(speed);
         this.lane = lane;
     }
 
@@ -32,5 +32,16 @@ public class Vehicles{
                 x = -width;
             }
         }
+    }
+
+    int validate_speed(int pspeed){
+        if (pspeed < 0){
+            pspeed =  -pspeed;
+        }
+        // speed limit
+        if (pspeed > 200){
+            pspeed = 199;
+        }
+        return pspeed;
     }
 }

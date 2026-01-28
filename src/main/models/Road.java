@@ -10,21 +10,21 @@ enum Approach {
 
 public class Road {
 
-    final int cx, cy;
+    int cx, cy;
 
-    final Orientation orientation;
-    final Approach approach;
+    Orientation orientation;
+    Approach approach;
 
-    final int lenght;
-    final int roadWidth;
-    final int laneCount;
-    final int stopLineOffset;
+    int lenght;
+    int roadWidth;
+    int laneCount;
+    int stopLineOffset;
 
 
-    final Color asphaltColor = new Color(60, 60, 60);
-    final Color laneMark = new Color(255, 255, 255);
-    final Color stopLineColor = new Color(255, 235, 235);
-    final Color crosColor = new Color(255, 235, 235);
+    Color asphaltColor = new Color(60, 60, 60);
+    Color laneMark = new Color(255, 255, 255);
+    Color stopLineColor = new Color(255, 235, 235);
+    Color crosColor = new Color(255, 235, 235);
 
     public Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
             int laneCount, int stopLineOffset) {

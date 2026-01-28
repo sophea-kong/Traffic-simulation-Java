@@ -6,9 +6,9 @@ enum LightState {
 }
 public class TrafficLight {
     int x,y;
-    final Approach approach;
+    Approach approach;
     LightState state;
-    final int greenMs, yellowMs, redMs;
+    int greenMs, yellowMs, redMs;
     int elapsedMs = 0;
     
     public TrafficLight(int x, int y, Approach approach, LightState initialState, int greenMs, int yellowMs, int redMs) {
