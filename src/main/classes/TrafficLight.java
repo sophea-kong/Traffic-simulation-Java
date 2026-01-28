@@ -6,7 +6,10 @@
 // goal : refactor the code
 // ** explain the concept of OOP in this project more clearly **
 
-
+enum Orientation {
+    HORIZONTAL,
+    VERTICAL
+}
 enum LightState {
     RED,
     YELLOW,
@@ -18,8 +21,8 @@ public class TrafficLight {
     float greenMs, yellowMs, redMs;
     float elapsedMs = 0;
 
-    TrafficLight(Coordinate position, LightState state, float greenMs, float yellowMs, float redMs) {
-        this.position = position;
+    public TrafficLight(float x, float y, LightState state, float greenMs, float yellowMs, float redMs) {
+        this.position = new Coordinate(x, y);
         this.state = state;
         this.greenMs = greenMs;
         this.yellowMs = yellowMs;
