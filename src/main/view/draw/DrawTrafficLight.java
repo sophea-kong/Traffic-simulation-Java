@@ -10,9 +10,9 @@ public class DrawTrafficLight {
         };
         
         g2d.setColor(Color.BLACK);
-        g2d.fillRect(light.x - 15, light.y - 45, 40, 100);
+        g2d.fillRect((int)light.position.x - 15, (int)light.position.y - 45, 40, 100);
         
         g2d.setColor(lightColor);
-        g2d.fillOval(light.x - 5, light.y - 35 + (light.state.ordinal() * 30), 20, 20);
+        g2d.fillOval((int)light.position.x - 5, (int)light.position.y - 35 + (light.state.ordinal() * 30), 20, 20);
     }
 }
