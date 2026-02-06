@@ -18,11 +18,13 @@ enum LightState {
 public class TrafficLight {
     Coordinate position;
     LightState state;
+    Road road;
     float greenMs, yellowMs, redMs;
     float elapsedMs = 0;
 
-    public TrafficLight(float x, float y, LightState state, float greenMs, float yellowMs, float redMs) {
-        this.position = new Coordinate(x, y);
+    TrafficLight(Coordinate position,Road road, LightState state, float greenMs, float yellowMs, float redMs) {
+        this.position = position;
+        this.road = road;
         this.state = state;
         this.greenMs = greenMs;
         this.yellowMs = yellowMs;
@@ -53,4 +55,29 @@ public class TrafficLight {
                 break;
         }
     }
+
+    public LightState getState() {
+        return this.state;
+    }
+
+    public Coordinate getPosition() {
+        return this.position;
+    }
+
+    public double getX() {
+        return this.position.x;
+    }
+
+    public double getY() {
+        return this.position.y;
+    }
+
+    public void setX(int x) {
+        this.position.x = x;
+    }
+
+    public Road getRoad(){
+        return this.road;
+    }
+
 }
