@@ -15,11 +15,10 @@ public class SimulationPanel extends JPanel {
         setPreferredSize(new Dimension(1000, 800));
 
         //create road object
-        Road road1 = new Road(100, 400, Orientation.HORIZONTAL, Approach.SOUTH, 600, 200, 2, 200);
-        Road road2 = new Road(900, 400, Orientation.HORIZONTAL, Approach.NORTH, 600, 200, 2, -200);
-        Road road3 = new Road(500, 750, Orientation.VERTICAL, Approach.EAST, 500, 200, 2, -200);
-        Road road4 = new Road(500, 50, Orientation.VERTICAL, Approach.WEST, 500, 200, 2, 200);
-
+        Road road1 = new Road(100, 400, Orientation.HORIZONTAL, Approach.SOUTH,200);
+        Road road2 = new Road(900, 400, Orientation.HORIZONTAL, Approach.NORTH, -200);
+        Road road3 = new Road(500, 750, Orientation.VERTICAL, Approach.EAST, -200);
+        Road road4 = new Road(500, 50, Orientation.VERTICAL, Approach.WEST, 200);
 
         roads.add(road1);
         roads.add(road2);
@@ -27,8 +26,8 @@ public class SimulationPanel extends JPanel {
         roads.add(road4);
 
         //create vehicle obeject 
-        Car car1 = new Car(Orientation.HORIZONTAL, 500, 450, 6.0, 0, road1, Car_load.ONE_PERSON);
-        Car car2 = new Car(Orientation.HORIZONTAL, 600, 350, 6.0, 0, road2, Car_load.FOUR_PERSON);
+        Car car1 = new Car(500, 450, Orientation.HORIZONTAL, road1, Car_load.ONE_PERSON);
+        Car car2 = new Car(600, 350, Orientation.HORIZONTAL, road2, Car_load.FOUR_PERSON);
 
         // Vehicles car4 = new Vehicles(Orientation.VERTICAL, 400, 150, 40, 30, 6, road4);
         

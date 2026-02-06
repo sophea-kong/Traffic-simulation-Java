@@ -9,9 +9,13 @@ enum Approach {
 }
 
 public class Road {
-    Coordinate position;   
+    static int idCounter = 0;
+    int id;
+    int cx, cy;
+
     Orientation orientation;
     Approach approach;
+
     int lenght;
     int roadWidth;
     int laneCount;
@@ -23,14 +27,21 @@ public class Road {
     Color stopLineColor = new Color(255, 235, 235);
     Color crosColor = new Color(255, 235, 235);
 
-    Road(int x, int y, Orientation orientation, Approach approach, int lenght, int roadWidth,
+    Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
             int laneCount, int stopLineOffset) {
-        this.position = new Coordinate(x, y);
+        this.cx = cx;
+        this.cy = cy;
         this.orientation = orientation;
         this.approach = approach;
         this.lenght = lenght;
         this.roadWidth = roadWidth;
         this.laneCount = laneCount;
         this.stopLineOffset = stopLineOffset;
+        this.id = idCounter++;
     }
+    public Road(int cx, int cy, Orientation orientation, Approach approach, int stopLineOffset) {
+        this(cx, cy, orientation, approach, 500, 200, 2, stopLineOffset);
+    }   
+    public int getId() { return id; }
+    public Orientation getOrientation() { return orientation; }
 }

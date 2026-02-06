@@ -8,8 +8,8 @@ enum Car_load {
 public class Car extends Vehicles {
     Car_load load;
 
-    Car(Orientation orientation, int x, int y, double speed, double curspeed, Road road, Car_load load) {
-        super(orientation, x, y, 50, 30, speed, curspeed, road);
+    Car(int x, int y, Orientation orientation,Road road, Car_load load) {
+        super(x, y, orientation, 50, 30, 6.0, 0, road);
         this.load = load;
     }
 
