@@ -30,7 +30,7 @@ public class Car extends Vehicles {
                 speedIncrease = 0.1;
                 break;
         }
-        if (this.curspeed >= this.speed) {
+        if (this.getCurspeed() >= this.getSpeed()) {
             speedIncrease = 0.0;
         }
         return speedIncrease;
@@ -38,30 +38,30 @@ public class Car extends Vehicles {
 
     @Override
     public void move(int windowsWidth, int windowHeight, Orientation orientation, Approach approach) {
-        this.curspeed += accelerate();
-        if (this.curspeed > this.speed) {
-            this.curspeed = this.speed;
+        this.setCurspeed(this.getCurspeed() + accelerate());
+        if (this.getCurspeed() > this.getSpeed()) {
+            this.setCurspeed(this.getSpeed());
         }
-        for(int i = 0; i < (int)this.curspeed; i++) {
+        for(int i = 0; i < (int)this.getCurspeed(); i++) {
             if (approach == Approach.SOUTH) {
             //use setX method to move left to right and wrap around
-            setX(position.x + curspeed);
-            if (position.x > windowsWidth) {
-                setX(-width); // Wrap around to the left
+            setX(this.getPosition().x + this.getCurspeed());
+            if (this.getPosition().x > windowsWidth) {
+                setX(-this.getwidth()); // Wrap around to the left
             }
         } else if (approach == Approach.EAST){
-            setY(position.y + curspeed);
-            if (position.y > windowHeight) {
-                setY(-height); // Wrap around to the top
+            setY(this.getPosition().y + this.getCurspeed());
+            if (this.getPosition().y > windowHeight) {
+                setY(-this.getheight()); // Wrap around to the top
             }
         } else if (approach == Approach.WEST){
-            setY(position.y - curspeed);
-            if (position.y < 0) {
+            setY(this.getPosition().y - this.getCurspeed());
+            if (this.getPosition().y < 0) {
                 setY(windowHeight); // Wrap around to the bottom
             }
         } else {
-            setX(position.x - curspeed);
-            if (position.x < 0) {
+            setX(this.getPosition().x - this.getCurspeed());
+            if (this.getPosition().x < 0) {
                 setX(windowsWidth); // Wrap around to the right
             }
         }
@@ -70,12 +70,12 @@ public class Car extends Vehicles {
     }
 
     public void setSpeedToZero() {
-        this.curspeed = 0;
+        this.setCurspeed(0);
     }
 
 
     // save the previous speed before stopping ( becuase stopping in main file mean that the speed is 0 so without saving previous speed we cant resume to previous speed)
-    private double previousSpeed = this.speed;
+    private double previousSpeed = this.getSpeed();
 
     public void setPreviousSpeed(double speed) {
         this.previousSpeed = speed;

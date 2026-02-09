@@ -1,15 +1,16 @@
+import java.security.PrivateKey;
 import java.util.List;
 
 
 
 public class Vehicles {
-    Coordinate position;
-    int width;
-    int height;
-    double speed;
-    double curspeed;
-    Road road;
-    Orientation orientation;
+    private Coordinate position;
+    private int width;
+    private int height;
+    private double speed;
+    private double curspeed;
+    private Road road;
+    private Orientation orientation;
 
     Vehicles(Orientation orientation, int x, int y, int width, int height, double speed,double curspeed, Road road) {
         this.orientation = orientation;
@@ -56,9 +57,36 @@ public class Vehicles {
         // breaking logic
     }
 
+    // getter and setter
+    public Coordinate getPosition() {
+        return position;
+    }
+
+    public double getCurspeed() {
+        return curspeed;
+    }
+
+    public void setCurspeed(double curspeed) {
+        this.curspeed = curspeed;
+    }
+
+    public int getwidth() {
+        return width;
+    }
+
+    public int getheight() {
+        return height;
+    }
+
+    public Road getRoad() {
+        return road;
+    }
+
+
+
 
     public void stop() {
-        this.speed = 0;
+        this.curspeed = 0;
     }
 
     public void setSpeed(double speed) {

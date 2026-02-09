@@ -37,4 +37,8 @@ public class Road {
         this.laneCount = laneCount;
         this.stopLineOffset = stopLineOffset;
     }
+
+    public Approach getApproach() {
+        return this.approach;
+    }
 }

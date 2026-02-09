@@ -98,12 +98,12 @@ public class SimulationPanel extends JPanel {
                 // use .move() to continue moving
                 v.setSpeed(v.getPreviousSpeed());
                 if (v.getSpeed() == 0) {
-                    v.move(1000,800,v.getOrientation(),v.road.approach);
+                    v.move(1000,800,v.getOrientation(),v.getRoad().getApproach());
                 }
             }
 
             // Move vehicle according to its approach and current speed
-            v.move(1000,800,v.getOrientation(),v.road.approach);
+            v.move(1000,800,v.getOrientation(),v.getRoad().getApproach());
         }
     }
 
