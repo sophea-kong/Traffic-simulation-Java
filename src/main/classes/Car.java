@@ -6,7 +6,7 @@ enum Car_load {
 }
 
 public class Car extends Vehicles {
-    Car_load load;
+    private Car_load load;
 
     Car(Orientation orientation, int x, int y, double speed, double curspeed, Road road, Car_load load) {
         super(orientation, x, y, 50, 30, speed, curspeed, road);
@@ -45,23 +45,23 @@ public class Car extends Vehicles {
         for(int i = 0; i < (int)this.getCurspeed(); i++) {
             if (approach == Approach.SOUTH) {
             //use setX method to move left to right and wrap around
-            setX(this.getPosition().x + this.getCurspeed());
-            if (this.getPosition().x > windowsWidth) {
+            setX(this.getPosition().getX() + this.getCurspeed());
+            if (this.getPosition().getX() > windowsWidth) {
                 setX(-this.getwidth()); // Wrap around to the left
             }
         } else if (approach == Approach.EAST){
-            setY(this.getPosition().y + this.getCurspeed());
-            if (this.getPosition().y > windowHeight) {
+            setY(this.getPosition().getY() - this.getCurspeed());
+            if (this.getPosition().getY() > windowHeight) {
                 setY(-this.getheight()); // Wrap around to the top
             }
         } else if (approach == Approach.WEST){
-            setY(this.getPosition().y - this.getCurspeed());
-            if (this.getPosition().y < 0) {
+            setY(this.getPosition().getY() + this.getCurspeed());
+            if (this.getPosition().getY() < 0) {
                 setY(windowHeight); // Wrap around to the bottom
             }
         } else {
-            setX(this.getPosition().x - this.getCurspeed());
-            if (this.getPosition().x < 0) {
+            setX(this.getPosition().getX() - this.getCurspeed());
+            if (this.getPosition().getX() < 0) {
                 setX(windowsWidth); // Wrap around to the right
             }
         }
@@ -83,6 +83,18 @@ public class Car extends Vehicles {
 
     public double getPreviousSpeed() {
         return this.previousSpeed;
+    }
+
+    public static Car create_car(Road road){
+        if (road.getApproach() == Approach.NORTH) {
+            return new Car(Orientation.VERTICAL, 1000, 350, 5.0, 5.0, road, Car_load.ONE_PERSON);
+        } else if (road.getApproach() == Approach.SOUTH) {
+            return new Car(Orientation.HORIZONTAL, 0, 450, 5.0, 5.0, road, Car_load.FOUR_PERSON);
+        } else if (road.getApproach() == Approach.EAST) {
+            return new Car(Orientation.VERTICAL, 550, 800, 5.0, 5.0, road, Car_load.TWO_PERSON);
+        } else {
+            return new Car(Orientation.HORIZONTAL, 450, 0, 5.0, 5.0, road, Car_load.THREE_PERSON);
+        }
     }
 
 }

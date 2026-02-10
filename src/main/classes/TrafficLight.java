@@ -1,11 +1,6 @@
-// change some int to float
-// create a class for object that interact with each other
-// preset all vehicle type 
-// seperate inanimated and animated object
-// goal : have two or three object interact with each other
-// goal : refactor the code
-// ** explain the concept of OOP in this project more clearly **
-
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
+import java.awt.Color;
 
 enum LightState {
     RED,
@@ -13,11 +8,11 @@ enum LightState {
     GREEN
 }
 public class TrafficLight {
-    Coordinate position;
-    LightState state;
-    Road road;
-    float greenMs, yellowMs, redMs;
-    float elapsedMs = 0;
+    private Coordinate position;
+    private LightState state;
+    private Road road;
+    private float greenMs, yellowMs, redMs;
+    private float elapsedMs = 0;
 
     TrafficLight(Coordinate position,Road road, LightState state, float greenMs, float yellowMs, float redMs) {
         this.position = position;
@@ -57,24 +52,24 @@ public class TrafficLight {
         return this.state;
     }
 
-    public Coordinate getPosition() {
-        return this.position;
-    }
-
-    public double getX() {
-        return this.position.x;
-    }
-
-    public double getY() {
-        return this.position.y;
-    }
-
-    public void setX(int x) {
-        this.position.x = x;
-    }
 
     public Road getRoad(){
         return this.road;
+    }
+
+
+    public static void drawTrafficLight(Graphics2D g2d, TrafficLight light) {
+        Color lightColor = switch (light.getState()) {
+            case RED -> Color.RED;
+            case YELLOW -> Color.YELLOW;
+            case GREEN -> Color.GREEN;
+        };
+        
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect((int)light.position.getX() - 15, (int)light.position.getY() - 45, 40, 100);
+        
+        g2d.setColor(lightColor);
+        g2d.fillOval((int)light.position.getX() - 5, (int)light.position.getY() - 35 + (light.getState().ordinal() * 30), 20, 20);
     }
 
 }

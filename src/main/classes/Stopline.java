@@ -1,11 +1,9 @@
 public class Stopline {
-    Coordinate position;
-    Orientation orientation;
-    Road road;
+    private Coordinate position;
+    private Road road;
 
-    public Stopline(Coordinate position, Orientation orientation, Road road) {
+    public Stopline(Coordinate position, Road road) {
         this.position = position;
-        this.orientation = orientation;
         this.road = road;
     }
 
