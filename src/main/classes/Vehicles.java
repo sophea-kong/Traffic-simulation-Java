@@ -3,29 +3,31 @@ import java.util.List;
 
 
 public class Vehicles {
-    static int idCounter = 0;  
-    int id;
     Coordinate position;
-    int width,height;
+    int width;
+    int height;
     double speed;
     double curspeed;
     Road road;
     Orientation orientation;
     
-    double turn_angle_north_to_west = 0;
-    double turnRadius = 150;
-    double INTERSECTION_X = 600;
-    double INTERSECTION_Y = 550;
-
-    Vehicles(int x, int y, Orientation orientation,int width, int height, double speed,double curspeed, Road road) {
-        this.position = new Coordinate(x, y);
+    Vehicles(Orientation orientation, Coordinate position, int width, int height, double speed,double curspeed, Road road) {
         this.orientation = orientation;
+        this.position = position;
         this.width = width;
         this.height = height;
         this.speed = validate_speed(speed);
         this.curspeed = curspeed;
         this.road = road;
-        this.id = idCounter++;
+    }
+    Vehicles(Orientation orientation, int x, int y, int width, int height, double speed,double curspeed, Road road) {
+        this.orientation = orientation;
+        this.position = new Coordinate(x, y);
+        this.width = width;
+        this.height = height;
+        this.speed = validate_speed(speed);
+        this.curspeed = curspeed;
+        this.road = road;
     }
 
     public void move(int windowsWidth, int windowHeight, Orientation orientation, Approach approach) {
@@ -106,9 +108,6 @@ public class Vehicles {
     public Orientation getOrientation() {
         return this.orientation;
     }
-    public int getId() { return id; }
-    public Coordinate getPosition() { return position; }
-    public Road getRoad() { return road; }
 
     private double validate_speed(double pspeed) {
         if (pspeed < 0) {
@@ -139,4 +138,6 @@ public class Vehicles {
         }
         return null;
     }
+
+
 }
