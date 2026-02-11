@@ -11,6 +11,8 @@ enum Approach {
 }
 
 public class Road {
+    private static int roadCount = 1;
+    private int id;
     private Coordinate position;
 
     private Orientation orientation;
@@ -28,6 +30,7 @@ public class Road {
 
     Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
             int laneCount, int stopLineOffset) {
+        this.id = roadCount++;
         this.position = new Coordinate(cx, cy);
         this.orientation = orientation;
         this.approach = approach;
@@ -41,6 +44,9 @@ public class Road {
         return this.approach;
     }
 
+    public int getId() {
+        return this.id;
+    }
 
     public static void drawRoad(Graphics2D g2d, Road road) {
         // Draw road background
