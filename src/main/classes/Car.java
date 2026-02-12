@@ -7,10 +7,24 @@ enum Car_load {
 
 public class Car extends Vehicles {
     Car_load load;
-
+    //int roadId;
     Car(Orientation orientation, int x, int y, double speed, double curspeed, Road road, Car_load load) {
         super(orientation, x, y, 50, 30, speed, curspeed, road);
         this.load = load;
+        //this.roadId = road.id;
+    }
+    Car(Orientation orientation, int x, int y, int roadId ) {
+        super(orientation, x, y, 50, 30, 6.0, 0, null);
+        //this.roadId = roadId;
+        this.load = Car_load.ONE_PERSON;
+    }
+    Car(Road road) {
+        super((road.id == 1 || road.id == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL,
+              (road.id == 1) ? new Coordinate(500, 450) : (road.id == 2) ? new Coordinate(600, 400) : 
+              (road.id == 3) ? new Coordinate(500, 750) : new Coordinate(500, 50),
+              50, 30, 6.0, 0, road);
+        //this.roadId = road.id;
+        this.load = Car_load.ONE_PERSON;
     }
 
     @Override

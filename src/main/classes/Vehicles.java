@@ -10,7 +10,16 @@ public class Vehicles {
     double curspeed;
     Road road;
     Orientation orientation;
-
+    
+    Vehicles(Orientation orientation, Coordinate position, int width, int height, double speed,double curspeed, Road road) {
+        this.orientation = orientation;
+        this.position = position;
+        this.width = width;
+        this.height = height;
+        this.speed = validate_speed(speed);
+        this.curspeed = curspeed;
+        this.road = road;
+    }
     Vehicles(Orientation orientation, int x, int y, int width, int height, double speed,double curspeed, Road road) {
         this.orientation = orientation;
         this.position = new Coordinate(x, y);

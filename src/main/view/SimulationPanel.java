@@ -15,10 +15,10 @@ public class SimulationPanel extends JPanel {
         setPreferredSize(new Dimension(1000, 800));
 
         //create road object
-        Road road1 = new Road(100, 400, Orientation.HORIZONTAL, Approach.SOUTH, 600, 200, 2, 200);
-        Road road2 = new Road(900, 400, Orientation.HORIZONTAL, Approach.NORTH, 600, 200, 2, -200);
-        Road road3 = new Road(500, 750, Orientation.VERTICAL, Approach.EAST, 500, 200, 2, -200);
-        Road road4 = new Road(500, 50, Orientation.VERTICAL, Approach.WEST, 500, 200, 2, 200);
+        Road road1 = new Road(100, 400, Orientation.HORIZONTAL, Approach.SOUTH, 600, 200, 2, 200, 1);
+        Road road2 = new Road(900, 400, Orientation.HORIZONTAL, Approach.NORTH, 600, 200, 2, -200,2);
+        Road road3 = new Road(500, 750, Orientation.VERTICAL, Approach.EAST, 500, 200, 2, -200,3);
+        Road road4 = new Road(500, 50, Orientation.VERTICAL, Approach.WEST, 500, 200, 2, 200, 4);
 
 
         roads.add(road1);
@@ -27,16 +27,19 @@ public class SimulationPanel extends JPanel {
         roads.add(road4);
 
         //create vehicle obeject 
-        Car car1 = new Car(Orientation.HORIZONTAL, 500, 450, 6.0, 0, road1, Car_load.ONE_PERSON);
-        Car car2 = new Car(Orientation.HORIZONTAL, 600, 350, 6.0, 0, road2, Car_load.FOUR_PERSON);
-
+        //Car car1 = new Car(Orientation.HORIZONTAL, 500, 450, 6.0, 0, road1, Car_load.ONE_PERSON);
+        //Car car2 = new Car(Orientation.HORIZONTAL, 750, 350, 6.0, 0, road2, Car_load.FOUR_PERSON);
+        // test overloaded constructor
+        Car car3 = new Car(road1);
+    
         // Vehicles car4 = new Vehicles(Orientation.VERTICAL, 400, 150, 40, 30, 6, road4);
         
 
 
-        vehicles.add(car1);
-        vehicles.add(car2);
-        // vehicles.add(car4);
+        //vehicles.add(car1);
+        //vehicles.add(car2);
+        // test
+        vehicles.add(car3);
         //create traffic light object
         TrafficLight light1 = new TrafficLight(new Coordinate(300, 550),road1, LightState.GREEN, 5000, 2000, 5000);
         TrafficLight light2 = new TrafficLight(new Coordinate(650, 250),road2, LightState.RED, 5000, 2000, 5000);
