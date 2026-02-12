@@ -47,7 +47,6 @@ public class SimulationPanel extends JPanel {
             }
 
             if (stop) {
-                // the car is not fully stopped yet, so set speed to 0
                 v.setSpeed(0);
             } else {
                 // restore previous speed

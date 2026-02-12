@@ -66,13 +66,11 @@ public class Car extends Vehicles {
             }
         }
         }
-
     }
 
     public void setSpeedToZero() {
         this.setCurspeed(0);
     }
-
 
     // save the previous speed before stopping ( becuase stopping in main file mean that the speed is 0 so without saving previous speed we cant resume to previous speed)
     private double previousSpeed = this.getSpeed();

@@ -7,6 +7,8 @@ enum LightState {
     GREEN
 }
 public class TrafficLight {
+    private static int lightCount = 1;
+    private int id;
     private Coordinate position;
     private LightState state;
     private Road road;
@@ -14,12 +16,40 @@ public class TrafficLight {
     private float elapsedMs = 0;
 
     TrafficLight(Coordinate position,Road road, LightState state, float greenMs, float yellowMs, float redMs) {
-        this.position = position;
-        this.road = road;
+        setPosition(position);
+        setRoad(road);
         this.state = state;
-        this.greenMs = greenMs;
-        this.yellowMs = yellowMs;
-        this.redMs = redMs;
+        this.greenMs = validateMs(greenMs);
+        this.yellowMs = validateMs(yellowMs);
+        this.redMs = validateMs(redMs);
+        this.id = lightCount++;
+    }
+    private void setPosition(Coordinate position) {
+        if(position == null) {
+            return;
+        }
+        this.position = position;
+    }
+
+    private void setRoad(Road road) {
+        if (road == null) {
+            return;
+        }
+        this.road = road;
+    }
+
+    private float validateMs(float Ms){
+        if (Ms < 0) {
+            Ms = 0;
+        } else if (Ms > 10000) {
+            Ms = 10000;
+        }
+        return Ms;
+    }
+
+
+    public int getId() {
+        return this.id;
     }
 
     public void update(int deltaMs) {

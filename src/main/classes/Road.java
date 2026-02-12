@@ -34,10 +34,54 @@ public class Road {
         this.position = new Coordinate(cx, cy);
         this.orientation = orientation;
         this.approach = approach;
-        this.lenght = lenght;
-        this.roadWidth = roadWidth;
-        this.laneCount = laneCount;
+        setLenght(lenght);
+        setRoadWidth(roadWidth);
+        setLaneCount(laneCount);
+        setStopLineOffset(stopLineOffset);
+    }
+
+
+    private void setStopLineOffset(int stopLineOffset) {
+        if (stopLineOffset < 0) {
+            stopLineOffset = 0;
+        } else if (stopLineOffset > this.lenght / 2) {
+            stopLineOffset = this.lenght / 2;
+        }
         this.stopLineOffset = stopLineOffset;
+    }
+    private void setLaneCount(int laneCount) {
+        if (laneCount < 1) {
+            laneCount = 1;
+        } else if (laneCount > 5) {
+            laneCount = 5;
+        }
+        this.laneCount = laneCount;
+    }
+
+    private void setRoadWidth(int roadWidth) {
+        if (roadWidth < 0) {
+            roadWidth = 0;
+        } else if (roadWidth > 1000) {
+            roadWidth = 1000;
+        }
+        this.roadWidth = roadWidth;
+
+    }
+
+    private void setPosition(Coordinate position) {
+        if (position == null) {
+            return;
+        }
+        this.position = position;
+    }
+    
+    private void setLenght(int lenght) {
+        if (lenght < 0) {
+            lenght = 0;
+        } else if (lenght > 2000) {
+            lenght = 2000;
+        }
+        this.lenght = lenght;
     }
 
     public Approach getApproach() {

@@ -4,6 +4,8 @@ import java.awt.Color;
 
 
 public class Vehicles {
+    private static int vehicleCount = 1;
+    private int vehicleId;
     private Coordinate position;
     private int width;
     private int height;
@@ -15,11 +17,12 @@ public class Vehicles {
     Vehicles(Orientation orientation, int x, int y, int width, int height, double speed, double curspeed, Road road) {
         this.orientation = orientation;
         this.position = new Coordinate(x, y);
-        this.width = width;
-        this.height = height;
-        this.speed = validate_speed(speed);
-        this.curspeed = curspeed;
-        this.road = road;
+        setWidth(width);
+        setHeight(height);
+        setSpeed(speed);
+        setCurspeed(curspeed);
+        setRoad(road);
+        this.vehicleId = vehicleCount++;
     }
 
     public void move(int windowsWidth, int windowHeight, Orientation orientation, Approach approach) {
@@ -58,6 +61,18 @@ public class Vehicles {
     }
 
     // getter and setter
+    private void setRoad(Road road) {
+        if (road == null) {
+            return;
+        }
+        this.road = road;
+    }
+
+
+    public int getVehicleId() {
+        return this.vehicleId;
+    }
+
     public Coordinate getPosition() {
         return position;
     }
@@ -67,6 +82,11 @@ public class Vehicles {
     }
 
     public void setCurspeed(double curspeed) {
+        if(curspeed > speed) {
+            curspeed = speed;
+        } else if (curspeed < 0) {
+            curspeed = 0;
+        }
         this.curspeed = curspeed;
     }
 
@@ -74,6 +94,23 @@ public class Vehicles {
         return width;
     }
 
+    private void setWidth(int width) {
+        if (width < 10) {
+            width = 10;
+        } else if (width > 200) {
+            width = 200;
+        }
+        this.width = width;
+    }
+
+    private void setHeight(int height) {
+        if (height < 10) {
+            height = 10;
+        } else if (height > 200) {
+            height = 200;
+        }
+        this.height = height;
+    }
     public int getheight() {
         return height;
     }
@@ -86,9 +123,6 @@ public class Vehicles {
         this.curspeed = 0;
     }
 
-    public void setSpeed(double speed) {
-        this.speed = validate_speed(speed);
-    }
 
     public double getSpeed() {
         return this.speed;
@@ -125,7 +159,7 @@ public class Vehicles {
         return this.orientation;
     }
 
-    private double validate_speed(double pspeed) {
+    public void setSpeed(double pspeed) {
         if (pspeed < 0) {
             pspeed = -pspeed;
         }
@@ -133,7 +167,7 @@ public class Vehicles {
         if (pspeed > 200) {
             pspeed = 199;
         }
-        return pspeed;
+        this.speed = pspeed;
     }
 
     public TrafficLight obeyLight(List<TrafficLight> all_TrafficLight) {
