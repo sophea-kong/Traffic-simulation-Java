@@ -24,6 +24,33 @@ public class TrafficLight {
         this.redMs = validateMs(redMs);
         this.id = lightCount++;
     }
+
+    TrafficLight(Road road, LightState state, float greenMs, float yellowMs, float redMs) {
+        this.position = (road.getId() == 1) ? new Coordinate(500.0, 450.0) :
+                        (road.getId() == 2) ? new Coordinate(600.0, 400.0) :
+                        (road.getId() == 3) ? new Coordinate(500.0, 750.0) :
+                                        new Coordinate(500.0, 50.0);
+        setRoad(road);
+        this.state = state;
+        this.greenMs = validateMs(greenMs);
+        this.yellowMs = validateMs(yellowMs);
+        this.redMs = validateMs(redMs);
+        this.id = lightCount++;
+    }
+
+    TrafficLight(Road raod, LightState state) {
+        this.position = (raod.getId() == 1) ? new Coordinate(500.0, 450.0) :
+                        (raod.getId() == 2) ? new Coordinate(600.0, 400.0) :
+                        (raod.getId() == 3) ? new Coordinate(500.0, 750.0) :
+                                        new Coordinate(500.0, 50.0);
+        setRoad(raod);
+        this.state = state;
+        this.greenMs = 5000;
+        this.yellowMs = 2000;
+        this.redMs = 5000;
+        this.id = lightCount++;
+    }
+
     private void setPosition(Coordinate position) {
         if(position == null) {
             return;

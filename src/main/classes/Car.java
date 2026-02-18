@@ -20,8 +20,8 @@ public class Car extends Vehicles {
     }
     Car(Road road) {
         super((road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL,
-              (road.getId() == 1) ? new Coordinate(500.0, 450.0) : (road.getId() == 2) ? new Coordinate(600.0, 400.0) : 
-              (road.getId() == 3) ? new Coordinate(500.0, 750.0) : new Coordinate(500.0, 50.0),
+              (road.getId() == 1) ? 500 : (road.getId() == 2) ? 600 : 500,
+              (road.getId() == 1) ? 450 : (road.getId() == 2) ? 400 : (road.getId() == 3) ? 750 : 50,
               50, 30, 6.0, 0, road);
         //this.roadId = road.id;
         this.load = Car_load.ONE_PERSON;

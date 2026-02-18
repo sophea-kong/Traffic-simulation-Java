@@ -25,8 +25,28 @@ public class Vehicles {
         this.vehicleId = vehicleCount++;
     }
 
-    public Vehicles(Orientation orientation2, Object object, int i, int j, double d, int k, Road road2) {
-        //TODO Auto-generated constructor stub
+    Vehicles(Road road) {
+        this.orientation = (road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL;
+        this.position = new Coordinate((road.getId() == 1) ? 500.0 : (road.getId() == 2) ? 600.0 : 500.0,
+                                      (road.getId() == 1) ? 450.0 : (road.getId() == 2) ? 400.0 : (road.getId() == 3) ? 750.0 : 50.0);
+        setWidth(50);
+        setHeight(30);
+        setSpeed(6.0);
+        setCurspeed(0);
+        setRoad(road);
+        this.vehicleId = vehicleCount++;
+    }
+
+    Vehicles(Road road,double speed) {
+        this.orientation = (road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL;
+        this.position = new Coordinate((road.getId() == 1) ? 500.0 : (road.getId() == 2) ? 600.0 : 500.0,
+                                      (road.getId() == 1) ? 450.0 : (road.getId() == 2) ? 400.0 : (road.getId() == 3) ? 750.0 : 50.0);
+        setWidth(50);
+        setHeight(30);
+        setSpeed(speed);
+        setCurspeed(0);
+        setRoad(road);
+        this.vehicleId = vehicleCount++;
     }
 
     public void move(int windowsWidth, int windowHeight, Orientation orientation, Approach approach) {
