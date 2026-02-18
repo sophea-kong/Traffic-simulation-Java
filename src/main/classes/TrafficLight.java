@@ -1,10 +1,5 @@
-// change some int to float
-// create a class for object that interact with each other
-// preset all vehicle type 
-// seperate inanimated and animated object
-// goal : have two or three object interact with each other
-// goal : refactor the code
-// ** explain the concept of OOP in this project more clearly **
+import java.awt.Graphics2D;
+import java.awt.Color;
 
 enum LightState {
     RED,
@@ -12,25 +7,76 @@ enum LightState {
     GREEN
 }
 public class TrafficLight {
-    Coordinate position;
-    LightState state;
-    Road road;
-    float greenMs, yellowMs, redMs;
-    float elapsedMs = 0;
-    int roadId;
+    private static int lightCount = 1;
+    private int id;
+    private Coordinate position;
+    private LightState state;
+    private Road road;
+    private float greenMs, yellowMs, redMs;
+    private float elapsedMs = 0;
 
     TrafficLight(Coordinate position,Road road, LightState state, float greenMs, float yellowMs, float redMs) {
-        this.position = position;
-        this.road = road;
+        setPosition(position);
+        setRoad(road);
         this.state = state;
-        this.greenMs = greenMs;
-        this.yellowMs = yellowMs;
-        this.redMs = redMs;
-        this.roadId = road.id;
+        this.greenMs = validateMs(greenMs);
+        this.yellowMs = validateMs(yellowMs);
+        this.redMs = validateMs(redMs);
+        this.id = lightCount++;
     }
-    TrafficLight(Coordinate position, int roadId) {
-        this(position, null, LightState.RED, 5000, 2000, 5000);
-        this.roadId = roadId;
+
+    TrafficLight(Road road, LightState state, float greenMs, float yellowMs, float redMs) {
+        this.position = (road.getId() == 1) ? new Coordinate(500.0, 450.0) :
+                        (road.getId() == 2) ? new Coordinate(600.0, 400.0) :
+                        (road.getId() == 3) ? new Coordinate(500.0, 750.0) :
+                                        new Coordinate(500.0, 50.0);
+        setRoad(road);
+        this.state = state;
+        this.greenMs = validateMs(greenMs);
+        this.yellowMs = validateMs(yellowMs);
+        this.redMs = validateMs(redMs);
+        this.id = lightCount++;
+    }
+
+    TrafficLight(Road raod, LightState state) {
+        this.position = (raod.getId() == 1) ? new Coordinate(500.0, 450.0) :
+                        (raod.getId() == 2) ? new Coordinate(600.0, 400.0) :
+                        (raod.getId() == 3) ? new Coordinate(500.0, 750.0) :
+                                        new Coordinate(500.0, 50.0);
+        setRoad(raod);
+        this.state = state;
+        this.greenMs = 5000;
+        this.yellowMs = 2000;
+        this.redMs = 5000;
+        this.id = lightCount++;
+    }
+
+    private void setPosition(Coordinate position) {
+        if(position == null) {
+            return;
+        }
+        this.position = position;
+    }
+
+    private void setRoad(Road road) {
+        if (road == null) {
+            return;
+        }
+        this.road = road;
+    }
+
+    private float validateMs(float Ms){
+        if (Ms < 0) {
+            Ms = 0;
+        } else if (Ms > 10000) {
+            Ms = 10000;
+        }
+        return Ms;
+    }
+
+
+    public int getId() {
+        return this.id;
     }
 
    public void update(int deltaMs) {
@@ -62,24 +108,24 @@ public class TrafficLight {
         return this.state;
     }
 
-    public Coordinate getPosition() {
-        return this.position;
-    }
-
-    public double getX() {
-        return this.position.x;
-    }
-
-    public double getY() {
-        return this.position.y;
-    }
-
-    public void setX(int x) {
-        this.position.x = x;
-    }
 
     public Road getRoad(){
         return this.road;
+    }
+
+
+    public static void drawTrafficLight(Graphics2D g2d, TrafficLight light) {
+        Color lightColor = switch (light.getState()) {
+            case RED -> Color.RED;
+            case YELLOW -> Color.YELLOW;
+            case GREEN -> Color.GREEN;
+        };
+        
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect((int)light.position.getX() - 15, (int)light.position.getY() - 45, 40, 100);
+        
+        g2d.setColor(lightColor);
+        g2d.fillOval((int)light.position.getX() - 5, (int)light.position.getY() - 35 + (light.getState().ordinal() * 30), 20, 20);
     }
 
 }

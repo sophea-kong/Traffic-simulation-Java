@@ -1,20 +1,38 @@
 public class Coordinate {
-    double x;
-    double y;
+    private double x;
+    private double y;
 
     public Coordinate(double x, double y) {
-        this.x = x;
-        this.y = y;
+        setX(x);
+        setY(y);
     }
 
-    double getX() {
+    public double getX() {
         return this.x;
     }
 
-    double getY() {
+    public  double getY() {
         return this.y;
     }
 
+    public void setX(double x) {
+        if (x < 0) {
+            x = 0;
+        } else if (x > 1000) {
+            x = 1000;
+        }
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        if(y < 0){
+            y = 0;
+        } else if ( y > 1000){
+            y = 1000;
+        }
+        this.y = y;
+    }
+    
     int compareTo(Coordinate other) {
         // comparison logic
         if (this.x != other.x) {

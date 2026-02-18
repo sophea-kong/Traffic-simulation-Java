@@ -6,8 +6,8 @@ enum Car_load {
 }
 
 public class Car extends Vehicles {
-    Car_load load;
-    //int roadId;
+    private Car_load load;
+
     Car(Orientation orientation, int x, int y, double speed, double curspeed, Road road, Car_load load) {
         super(orientation, x, y, 50, 30, speed, curspeed, road);
         this.load = load;
@@ -19,9 +19,9 @@ public class Car extends Vehicles {
         this.load = Car_load.ONE_PERSON;
     }
     Car(Road road) {
-        super((road.id == 1 || road.id == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL,
-              (road.id == 1) ? new Coordinate(500, 450) : (road.id == 2) ? new Coordinate(600, 400) : 
-              (road.id == 3) ? new Coordinate(500, 750) : new Coordinate(500, 50),
+        super((road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL,
+              (road.getId() == 1) ? 500 : (road.getId() == 2) ? 600 : 500,
+              (road.getId() == 1) ? 450 : (road.getId() == 2) ? 400 : (road.getId() == 3) ? 750 : 50,
               50, 30, 6.0, 0, road);
         //this.roadId = road.id;
         this.load = Car_load.ONE_PERSON;
@@ -44,7 +44,7 @@ public class Car extends Vehicles {
                 speedIncrease = 0.1;
                 break;
         }
-        if (this.curspeed >= this.speed) {
+        if (this.getCurspeed() >= this.getSpeed()) {
             speedIncrease = 0.0;
         }
         return speedIncrease;
@@ -52,44 +52,42 @@ public class Car extends Vehicles {
 
     @Override
     public void move(int windowsWidth, int windowHeight, Orientation orientation, Approach approach) {
-        this.curspeed += accelerate();
-        if (this.curspeed > this.speed) {
-            this.curspeed = this.speed;
+        this.setCurspeed(this.getCurspeed() + accelerate());
+        if (this.getCurspeed() > this.getSpeed()) {
+            this.setCurspeed(this.getSpeed());
         }
-        for(int i = 0; i < (int)this.curspeed; i++) {
+        for(int i = 0; i < (int)this.getCurspeed(); i++) {
             if (approach == Approach.SOUTH) {
             //use setX method to move left to right and wrap around
-            setX(position.x + curspeed);
-            if (position.x > windowsWidth) {
-                setX(-width); // Wrap around to the left
+            setX(this.getPosition().getX() + this.getCurspeed());
+            if (this.getPosition().getX() > windowsWidth) {
+                setX(-this.getwidth()); // Wrap around to the left
             }
         } else if (approach == Approach.EAST){
-            setY(position.y + curspeed);
-            if (position.y > windowHeight) {
-                setY(-height); // Wrap around to the top
+            setY(this.getPosition().getY() - this.getCurspeed());
+            if (this.getPosition().getY() > windowHeight) {
+                setY(-this.getheight()); // Wrap around to the top
             }
         } else if (approach == Approach.WEST){
-            setY(position.y - curspeed);
-            if (position.y < 0) {
+            setY(this.getPosition().getY() + this.getCurspeed());
+            if (this.getPosition().getY() < 0) {
                 setY(windowHeight); // Wrap around to the bottom
             }
         } else {
-            setX(position.x - curspeed);
-            if (position.x < 0) {
+            setX(this.getPosition().getX() - this.getCurspeed());
+            if (this.getPosition().getX() < 0) {
                 setX(windowsWidth); // Wrap around to the right
             }
         }
         }
-
     }
 
     public void setSpeedToZero() {
-        this.curspeed = 0;
+        this.setCurspeed(0);
     }
 
-
     // save the previous speed before stopping ( becuase stopping in main file mean that the speed is 0 so without saving previous speed we cant resume to previous speed)
-    private double previousSpeed = this.speed;
+    private double previousSpeed = this.getSpeed();
 
     public void setPreviousSpeed(double speed) {
         this.previousSpeed = speed;
@@ -97,6 +95,18 @@ public class Car extends Vehicles {
 
     public double getPreviousSpeed() {
         return this.previousSpeed;
+    }
+
+    public static Car create_car(Road road){
+        if (road.getApproach() == Approach.NORTH) {
+            return new Car(Orientation.VERTICAL, 1000, 350, 5.0, 5.0, road, Car_load.ONE_PERSON);
+        } else if (road.getApproach() == Approach.SOUTH) {
+            return new Car(Orientation.HORIZONTAL, 0, 450, 5.0, 5.0, road, Car_load.FOUR_PERSON);
+        } else if (road.getApproach() == Approach.EAST) {
+            return new Car(Orientation.VERTICAL, 550, 800, 5.0, 5.0, road, Car_load.TWO_PERSON);
+        } else {
+            return new Car(Orientation.HORIZONTAL, 450, 0, 5.0, 5.0, road, Car_load.THREE_PERSON);
+        }
     }
 
 }
