@@ -11,6 +11,20 @@ public class Car extends Vehicles {
     Car(Orientation orientation, int x, int y, double speed, double curspeed, Road road, Car_load load) {
         super(orientation, x, y, 50, 30, speed, curspeed, road);
         this.load = load;
+        //this.roadId = road.id;
+    }
+    Car(Orientation orientation, int x, int y, int roadId ) {
+        super(orientation, x, y, 50, 30, 6.0, 0, null);
+        //this.roadId = roadId;
+        this.load = Car_load.ONE_PERSON;
+    }
+    Car(Road road) {
+        super((road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL,
+              (road.getId() == 1) ? new Coordinate(500.0, 450.0) : (road.getId() == 2) ? new Coordinate(600.0, 400.0) : 
+              (road.getId() == 3) ? new Coordinate(500.0, 750.0) : new Coordinate(500.0, 50.0),
+              50, 30, 6.0, 0, road);
+        //this.roadId = road.id;
+        this.load = Car_load.ONE_PERSON;
     }
 
     @Override

@@ -52,7 +52,7 @@ public class TrafficLight {
         return this.id;
     }
 
-    public void update(int deltaMs) {
+   public void update(int deltaMs) {
         elapsedMs += deltaMs;
 
         switch (state) {

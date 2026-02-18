@@ -33,4 +33,11 @@ public class Coordinate {
         this.y = y;
     }
     
+    int compareTo(Coordinate other) {
+        // comparison logic
+        if (this.x != other.x) {
+            return Double.compare(this.x, other.x);
+        }
+        return Double.compare(this.y, other.y);
+    }
 }

@@ -25,6 +25,10 @@ public class Vehicles {
         this.vehicleId = vehicleCount++;
     }
 
+    public Vehicles(Orientation orientation2, Object object, int i, int j, double d, int k, Road road2) {
+        //TODO Auto-generated constructor stub
+    }
+
     public void move(int windowsWidth, int windowHeight, Orientation orientation, Approach approach) {
         // the curspeed is used to move the vehicle
         if (approach == Approach.SOUTH) {
