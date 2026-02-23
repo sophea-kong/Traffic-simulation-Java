@@ -51,6 +51,19 @@ public class TrafficLight {
         this.id = lightCount++;
     }
 
+    TrafficLight(int RoadId){
+        this.position = (RoadId == 1) ? new Coordinate(500.0, 450.0) :
+                        (RoadId == 2) ? new Coordinate(600.0, 400.0) :
+                        (RoadId == 3) ? new Coordinate(500.0, 750.0) :
+                                        new Coordinate(500.0, 50.0);
+        this.road = null;
+        this.state = LightState.RED;
+        this.greenMs = 5000;
+        this.yellowMs = 2000;
+        this.redMs = 5000;
+        this.id = lightCount++;
+    }
+
     private void setPosition(Coordinate position) {
         if(position == null) {
             return;
@@ -78,6 +91,7 @@ public class TrafficLight {
     public int getId() {
         return this.id;
     }
+
 
    public void update(int deltaMs) {
         elapsedMs += deltaMs;

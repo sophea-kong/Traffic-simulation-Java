@@ -56,19 +56,19 @@ class Road {
         setPosition(new Coordinate(x, y));
         this.orientation = orientation;
         this.approach = approach;
-        this.lenght = 600;
-        this.roadWidth = 200;
-        this.laneCount = 2;
-        this.stopLineOffset = stopLineOffset;
+        setLenght(600);
+        setRoadWidth(200);
+        setLaneCount(2);
+        setStopLineOffset(stopLineOffset);
         this.id = Road.idCounter++;
     }
-   Road (int x, int y, Approach approach, int id) {  
+   Road (int x, int y, Approach approach) {  
         setPosition(new Coordinate(x, y));
         this.orientation = (approach == Approach.NORTH || approach == Approach.SOUTH) ? Orientation.HORIZONTAL : Orientation.VERTICAL;
         this.approach = approach;
-        this.lenght = 600;  
-        this.roadWidth = 200;
-        this.laneCount = 2;
+        setLenght(600);
+        setRoadWidth(200);
+        setLaneCount(2);
         this.stopLineOffset = (approach == Approach.NORTH || approach == Approach.EAST) ? 200 : -200;
         this.id = Road.idCounter++; 
    } 
@@ -76,10 +76,10 @@ class Road {
         setPosition(new Coordinate(x, y));
         this.orientation = (id == 1 || id == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL; 
         this.approach = (id == 1) ? Approach.SOUTH : (id == 2) ? Approach.NORTH : (id == 3) ? Approach.EAST : Approach.WEST;
-        this.lenght = 600;  
-        this.roadWidth = 200;
-        this.laneCount = 2;
-        this.stopLineOffset = (this.approach == Approach.SOUTH || this.approach == Approach.WEST) ? 200 : -200;
+        setLenght(600);
+        setRoadWidth(200);
+        setLaneCount(2);
+        setStopLineOffset((this.approach == Approach.SOUTH || this.approach == Approach.WEST) ? 200 : -200);
         this.id = Road.idCounter++; 
    }
 

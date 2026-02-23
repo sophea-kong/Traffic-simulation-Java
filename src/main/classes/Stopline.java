@@ -12,6 +12,7 @@ public class Stopline {
         this.id = Stopline.count++;
     }
 
+
     private void setPosition(Coordinate position) {
         if (position == null) {
             return;

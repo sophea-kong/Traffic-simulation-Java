@@ -125,20 +125,46 @@ public class SimulationPanel extends JPanel {
         }
     }
 
-    void addRoad(Road road) {
-        roads.add(road);
+    private Road findRoadbyId(int id) {
+        for (Road road : roads) {
+            if (road.getId() == id) {
+                System.out.println("Found Road with ID: " + id + ", Approach: " + road.getApproach());
+                return road;
+            }
+        }
+        return null;
+    }
+
+    void addnewRoad(int x, int y, Approach approach) {
+        roads.add(new Road(x, y, approach));
+        for (Road road : roads) {
+            System.out.println("Road ID: " + road.getId() + ", Approach: " + road.getApproach());
+        }
     }
 
     void addTrafficLight(TrafficLight light) {
         trafficLights.add(light);
     }
 
-    void addVehicle(Car car) {
-        vehicles.add(car);
+    void addVehicle(int roadId) {
+        vehicles.add(new Car(findRoadbyId(roadId)));
     }
 
-    void addstopline(Stopline line) {
-        stoplines.add(line);
+    void addLight(int x, int y, int roadId, LightState state, int greenMs, int yellowMs, int redMs) {
+        Road road = findRoadbyId(roadId);
+        if (road != null) {
+            trafficLights.add(new TrafficLight(new Coordinate(x, y), road, state, greenMs, yellowMs, redMs));
+        }
+    }
+
+
+    void addstopline(Coordinate position, int roadid) {
+        Road road = findRoadbyId(roadid);
+        if (road != null) {
+            stoplines.add(new Stopline(position, findRoadbyId(roadid)));
+        } else {
+            System.out.println("Road with ID " + roadid + " not found. Stopline not added.");
+        }
     }
 }
 // sophea

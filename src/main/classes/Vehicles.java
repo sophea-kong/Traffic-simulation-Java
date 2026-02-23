@@ -53,22 +53,22 @@ public class Vehicles {
         // the curspeed is used to move the vehicle
         if (approach == Approach.SOUTH) {
             // use setX method to move left to right and wrap around
-            setX(position.getX() + curspeed);
+            setX(position.getX() - curspeed);
             if (position.getX() > windowsWidth) {
                 setX(-width); // Wrap around to the left
             }
         } else if (approach == Approach.EAST) {
-            setY(position.getY() + curspeed);
+            setY(position.getY() - curspeed);
             if (position.getY() > windowHeight) {
                 setY(-height); // Wrap around to the top
             }
         } else if (approach == Approach.WEST) {
-            setY(position.getY() - curspeed);
+            setY(position.getY() + curspeed);
             if (position.getY() < 0) {
                 setY(windowHeight); // Wrap around to the bottom
             }
         } else {
-            setX(position.getX() - curspeed);
+            setX(position.getX() + curspeed);
             if (position.getX() < 0) {
                 setX(windowsWidth); // Wrap around to the right
             }
@@ -157,7 +157,7 @@ public class Vehicles {
     }
 
     public void setX(double x) {
-        if (x < 0 && this.road.getApproach() == Approach.NORTH) {
+        if (x < 0) {
             x = 1000;
         }
         if (x > 1000) {
@@ -204,7 +204,7 @@ public class Vehicles {
             if (lroad == null)
                 continue;
             // match either by the same Road instance or by the same Approach
-            if (this.road == lroad || this.road.getApproach() == lroad.getApproach()) {
+            if (this.road == lroad || this.road.getId() == lroad.getId()) {
                 return light;
             }
         }
@@ -213,7 +213,9 @@ public class Vehicles {
 
     public Stopline obeyLine(List<Stopline> all_line) {
         for (Stopline line : all_line) {
-            if (line.getRoad().getApproach() == this.road.getApproach()) {
+            System.out.println(line.getRoad().getId());
+            if (line.getRoad().getId() == this.road.getId()) {
+                System.out.println("Vehicle " + this.vehicleId + " matched with Stopline " + line.getId() + " on Road " + line.getRoad().getId());
                 return line;
             }
         }
