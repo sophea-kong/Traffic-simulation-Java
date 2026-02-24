@@ -1,9 +1,9 @@
 import java.util.List;
 import java.awt.Graphics2D;
 import java.awt.Color;
+import java.awt.geom.AffineTransform;
 
-
-public class Vehicles {
+public class Vehicles implements Renderable{
     private static int vehicleCount = 1;
     private int vehicleId;
     private Coordinate position;
@@ -213,9 +213,7 @@ public class Vehicles {
 
     public Stopline obeyLine(List<Stopline> all_line) {
         for (Stopline line : all_line) {
-            System.out.println(line.getRoad().getId());
             if (line.getRoad().getId() == this.road.getId()) {
-                System.out.println("Vehicle " + this.vehicleId + " matched with Stopline " + line.getId() + " on Road " + line.getRoad().getId());
                 return line;
             }
         }
@@ -224,20 +222,35 @@ public class Vehicles {
 
 
 
+    public void render(Graphics2D g2d, boolean vertical) {
+        // Save original transform
+        AffineTransform oldTx = g2d.getTransform();
 
-    public static void drawVehicle(Graphics2D g2d, Vehicles v) {
+        // Compute center of the car to rotate around its center
+        double cx = this.getX() + this.width / 2.0;
+        double cy = this.getY() + this.height / 2.0;
+
+        // Rotate 90 degrees (π/2) when vertical; 0 when horizontal
+        double angle = vertical ? Math.PI / 2.0 : 0.0;
+        g2d.rotate(angle, cx, cy);
+
+        // Draw body
         g2d.setColor(Color.RED);
-        g2d.fillRect((int)v.getX(), (int)v.getY(), v.width, v.height);
-        
+        g2d.fillRect((int)this.getX(), (int)this.getY(), this.width, this.height);
+
         // Draw windows
         g2d.setColor(Color.CYAN);
-        g2d.fillRect((int)(v.getX() + 5), (int)(v.getY() + 5), 8, 8);
-        g2d.fillRect((int)(v.getX() + v.width - 13), (int)(v.getY() + 5), 8, 8);
-        
+        g2d.fillRect((int)(this.getX() + 5), (int)(this.getY() + 5), 8, 8);
+        g2d.fillRect((int)(this.getX() + this.width - 13), (int)(this.getY() + 5), 8, 8);
+
         // Draw wheels
         g2d.setColor(Color.BLACK);
-        g2d.fillOval((int)(v.getX() + 5), (int)(v.getY() + v.height - 8), 6, 6);
-        g2d.fillOval((int)(v.getX() + v.width - 11), (int)(v.getY() + v.height - 8), 6, 6);
+        g2d.fillOval((int)(this.getX() + 5), (int)(this.getY() + this.height - 8), 6, 6);
+        g2d.fillOval((int)(this.getX() + this.width - 11), (int)(this.getY() + this.height - 8), 6, 6);
+
+        // Restore original transform
+        g2d.setTransform(oldTx);
     }
+
 
 }

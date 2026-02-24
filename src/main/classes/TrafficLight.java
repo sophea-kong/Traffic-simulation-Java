@@ -6,7 +6,7 @@ enum LightState {
     YELLOW,
     GREEN
 }
-public class TrafficLight {
+public class TrafficLight implements Renderable,Updatable {
     private static int lightCount = 1;
     private int id;
     private Coordinate position;
@@ -127,8 +127,9 @@ public class TrafficLight {
         return this.road;
     }
 
-
-    public static void drawTrafficLight(Graphics2D g2d, TrafficLight light) {
+    @Override
+    public void render(Graphics2D g2d, boolean vertical) {
+        TrafficLight light = this;
         Color lightColor = switch (light.getState()) {
             case RED -> Color.RED;
             case YELLOW -> Color.YELLOW;

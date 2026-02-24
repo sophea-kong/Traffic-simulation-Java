@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimulationPanel extends JPanel {
-    private List<Road> roads = new ArrayList<>();
+    private List<Renderable> roads = new ArrayList<>();
     private List<TrafficLight> trafficLights = new ArrayList<>();
-    private List<Car> vehicles = new ArrayList<>();
+    private List<Vehicle> vehicles = new ArrayList<>();
     private List<Stopline> stoplines = new ArrayList<>();
 
     public SimulationPanel(int windowWidth, int windowHeight) {
@@ -75,11 +75,14 @@ public class SimulationPanel extends JPanel {
         }
         int stopDistance = 50; // pixels
 
-        for (Car v : vehicles) {
+        for (Vehicle v : vehicles) {
             boolean stop = false;
-
-            TrafficLight matchedLight = v.obeyLight(trafficLights);
-            Stopline matchedLine = v.obeyLine(stoplines);
+            TrafficLight matchedLight = null;
+            Stopline matchedLine = null;
+            if (v instanceof Car car) {
+                matchedLight = car.obeyLight(trafficLights);
+                matchedLine = car.obeyLine(stoplines);
+            }
 
             if (matchedLight != null && matchedLine != null && matchedLight.getState() == LightState.RED) {
                 Coordinate sl = matchedLine.getPosition();
@@ -98,8 +101,7 @@ public class SimulationPanel extends JPanel {
                 // restore previous speed
                 v.setSpeed(v.getPreviousSpeed());
             }
-
-            v.move(1000, 800, v.getOrientation(), v.getRoad().getApproach());
+            v.move(1000, 800);
         }
     }
 
@@ -110,26 +112,39 @@ public class SimulationPanel extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Draw roads
-        for (Road road : roads) {
-            Road.drawRoad(g2d, road);
+        for (Renderable road : roads) {
+            boolean vertical = false;
+            if (road instanceof Road r) {
+                vertical = r.getOrientation() == Orientation.VERTICAL;
+            }
+            if(road instanceof Renderable r){
+                r.render(g2d, vertical);
+            }
         }
 
         // Draw traffic lights
         for (TrafficLight light : trafficLights) {
-            TrafficLight.drawTrafficLight(g2d, light);
+            if (light instanceof Renderable r) {
+                 r.render(g2d, false);
+            }
         }
 
         // Draw vehicles
-        for (Vehicles v : vehicles) {
-            Vehicles.drawVehicle(g2d, v);
+        for (Vehicle v : vehicles) {
+            boolean vertical = false;
+            if (v instanceof Car c) {
+                vertical = c.getOrientation() == Orientation.VERTICAL;
+            }
+            if(v instanceof Renderable r){
+             r.render(g2d, vertical);
+            }
         }
     }
 
     private Road findRoadbyId(int id) {
-        for (Road road : roads) {
-            if (road.getId() == id) {
-                System.out.println("Found Road with ID: " + id + ", Approach: " + road.getApproach());
-                return road;
+        for (Renderable road : roads) {
+            if (road instanceof Road r && r.getId() == id) {
+                return r;
             }
         }
         return null;
@@ -137,9 +152,7 @@ public class SimulationPanel extends JPanel {
 
     void addnewRoad(int x, int y, Approach approach) {
         roads.add(new Road(x, y, approach));
-        for (Road road : roads) {
-            System.out.println("Road ID: " + road.getId() + ", Approach: " + road.getApproach());
-        }
+
     }
 
     void addTrafficLight(TrafficLight light) {

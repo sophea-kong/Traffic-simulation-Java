@@ -34,7 +34,7 @@ public class TrafficSimulationApp extends JFrame {
 
         panel.addstopline(new Coordinate(280, 420), 1);
         panel.addstopline(new Coordinate(650, 350), 2);
-        panel.addstopline(new Coordinate(550, 550), 3);
+        panel.addstopline(new Coordinate(500, 550), 3);
         panel.addstopline(new Coordinate(450, 250), 4);
 
 
@@ -46,8 +46,8 @@ public class TrafficSimulationApp extends JFrame {
 
         panel.addLight(300, 550, 1, LightState.GREEN, 5000, 2000, 5000);
         panel.addLight(650, 250, 2, LightState.RED, 5000, 2000, 5000);
-        panel.addLight(350, 250, 3, LightState.RED, 5000, 2000, 5000);
-        panel.addLight(650, 550, 4, LightState.RED, 5000, 2000, 500);
+        panel.addLight(350, 250, 4, LightState.RED, 5000, 2000, 5000);
+        panel.addLight(650, 550, 3, LightState.RED, 5000, 2000, 5000);
 
         add(panel);
 

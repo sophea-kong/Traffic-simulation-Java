@@ -10,7 +10,7 @@ enum Approach {
     NORTH, SOUTH, EAST, WEST
 }
 
-class Road {
+public class Road implements Renderable{
     public static int idCounter = 1;
     private int id;
     private Coordinate position;
@@ -133,11 +133,18 @@ class Road {
         return this.approach;
     }
 
+    public Orientation getOrientation() {
+        return this.orientation;
+    }
+
     public int getId() {
         return this.id;
     }
-
-    public static void drawRoad(Graphics2D g2d, Road road) {
+    public Coordinate getPosition() {
+        return this.position;
+    }
+    public void render(Graphics2D g2d, boolean vertical) {
+        Road road = this;
         // Draw road background
         g2d.setColor(road.asphaltColor);
 
