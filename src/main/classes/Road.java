@@ -16,7 +16,7 @@ class Road {
     private Coordinate position;
 
     private Orientation orientation;
-    private Approach approach;
+    Approach approach;
 
     private int lenght;
     private int roadWidth;
@@ -28,17 +28,12 @@ class Road {
     private Color stopLineColor = new Color(255, 235, 235);
     // private Color crosColor = new Color(255, 235, 235);
 
-    Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
-            int laneCount, int stopLineOffset) {
-        this.id = Road.idCounter++;
-        setPosition(new Coordinate(cx, cy));
-        this.orientation = orientation;
-        this.approach = approach;
-        setLenght(lenght);
-        setRoadWidth(roadWidth);
-        setLaneCount(laneCount);
-        setStopLineOffset(stopLineOffset);
-    }
+    protected Coordinate leftTurn;
+    protected Coordinate rightTurn;
+    protected Coordinate turn;
+    protected double leftTurnRadius;
+    protected double rightTurnRadius;
+
 
 
     Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
@@ -83,6 +78,67 @@ class Road {
         this.id = Road.idCounter++; 
    }
 
+    Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
+            int laneCount, int stopLineOffset) {
+        setPosition(new Coordinate(cx, cy));
+        this.orientation = orientation;
+        this.approach = approach;
+        this.lenght = lenght;
+        this.roadWidth = roadWidth;
+        this.laneCount = laneCount;
+        this.stopLineOffset = stopLineOffset;
+
+        // Calculate intersection center (assuming it's at the end of the road)
+        int icx, icy;
+        int halfLen = lenght / 2;
+        int halfWidth = roadWidth / 2;
+
+        if (orientation == Orientation.HORIZONTAL) {
+            icy = cy;
+            if (approach == Approach.EAST) {
+                icx = cx + halfLen + halfWidth;
+            } else { // WEST
+                icx = cx - halfLen - halfWidth;
+            }
+        } else { // VERTICAL
+            icx = cx;
+            if (approach == Approach.SOUTH) {
+                icy = cy + halfLen + halfWidth;
+            } else { // NORTH
+                icy = cy - halfLen - halfWidth;
+            }
+        }
+
+        // Logic for lane offset (assuming right-hand traffic)
+        // laneOffset = halfWidth / laneCount (for 2 lanes, this is 50)
+        int laneOffset = 50; 
+
+        if (approach == Approach.EAST) { // Moving Right (+X)
+            this.turn = new Coordinate(icx - halfWidth, icy + laneOffset);
+            this.leftTurn = new Coordinate(icx - halfWidth, icy - halfWidth);
+            this.rightTurn = new Coordinate(icx - halfWidth, icy + halfWidth);
+            this.leftTurnRadius = halfWidth + laneOffset; // 150
+            this.rightTurnRadius = halfWidth - laneOffset; // 50
+        } else if (approach == Approach.WEST) { // Moving Left (-X)
+            this.turn = new Coordinate(icx + halfWidth, icy - laneOffset);
+            this.leftTurn = new Coordinate(icx + halfWidth, icy + halfWidth);
+            this.rightTurn = new Coordinate(icx + halfWidth, icy - halfWidth);
+            this.leftTurnRadius = halfWidth + laneOffset;
+            this.rightTurnRadius = halfWidth - laneOffset;
+        } else if (approach == Approach.NORTH) { // Moving Up (-Y)
+            this.turn = new Coordinate(icx + laneOffset, icy + halfWidth);
+            this.leftTurn = new Coordinate(icx - halfWidth, icy + halfWidth);
+            this.rightTurn = new Coordinate(icx + halfWidth, icy + halfWidth);
+            this.leftTurnRadius = halfWidth + laneOffset;
+            this.rightTurnRadius = halfWidth - laneOffset;
+        } else if (approach == Approach.SOUTH) { // Moving Down (+Y)
+            this.turn = new Coordinate(icx - laneOffset, icy - halfWidth);
+            this.leftTurn = new Coordinate(icx + halfWidth, icy - halfWidth);
+            this.rightTurn = new Coordinate(icx - halfWidth, icy - halfWidth);
+            this.leftTurnRadius = halfWidth + laneOffset;
+            this.rightTurnRadius = halfWidth - laneOffset;
+        }
+    }
 
     private void setStopLineOffset(int stopLineOffset) {
         if (stopLineOffset < 0) {

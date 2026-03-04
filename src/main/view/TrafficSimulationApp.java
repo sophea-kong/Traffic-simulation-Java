@@ -7,28 +7,27 @@ public class TrafficSimulationApp extends JFrame {
         setResizable(false);
 
         // create road object
-        Road road1 = new Road(100, 400, Orientation.HORIZONTAL, Approach.SOUTH, 600, 200, 2, 200);
-        Road road2 = new Road(900, 400, Orientation.HORIZONTAL, Approach.NORTH, 600, 200, 2, -200);
-        Road road3 = new Road(500, 750, Orientation.VERTICAL, Approach.EAST, 500, 200, 2, -200);
-        Road road4 = new Road(500, 50, Orientation.VERTICAL, Approach.WEST, 500, 200, 2, 200);
+        Road road1 = new Road(200, 400, Orientation.HORIZONTAL, Approach.EAST, 400, 200, 2, 180);
+        Road road2 = new Road(800, 400, Orientation.HORIZONTAL, Approach.WEST, 400, 200, 2, -180);
+        Road road3 = new Road(500, 650, Orientation.VERTICAL, Approach.NORTH, 300, 200, 2, -130);
+        Road road4 = new Road(500, 150, Orientation.VERTICAL, Approach.SOUTH, 300, 200, 2, 130);
 
         // create vehicle obeject
-        Car car1 = Car.create_car(road1);
-        Car car2 = Car.create_car(road2);
-        Car car3 = Car.create_car(road3);
-        Car car4 = Car.create_car(road4);
+        Car car1 = new Car(Orientation.HORIZONTAL, 0, 450, 6.0, 0, road1, Car_load.ONE_PERSON, Approach.NORTH);
+        Car car2 = new Car(Orientation.HORIZONTAL, 1000, 350, 6.0, 0, road2, Car_load.FOUR_PERSON, Approach.WEST);
+        Car car3 = new Car(Orientation.VERTICAL, 500, 750, 6.0, 0, road3, Car_load.THREE_PERSON, Approach.WEST);
+        Car car4 = new Car(Orientation.VERTICAL, 450, 50, 6.0, 0, road4, Car_load.TWO_PERSON, Approach.SOUTH);
 
-        TrafficLight light1 = new TrafficLight(new Coordinate(300, 550), road1, LightState.GREEN, 5000, 2000, 5000);
-        TrafficLight light2 = new TrafficLight(new Coordinate(650, 250), road2, LightState.RED, 5000, 2000, 5000);
-        TrafficLight light4 = new TrafficLight(new Coordinate(350, 250), road4, LightState.RED, 5000, 2000, 5000);
-        TrafficLight light3 = new TrafficLight(new Coordinate(650, 550), road3, LightState.RED, 5000, 2000, 5000);
+        TrafficLight light1 = new TrafficLight(new Coordinate(380, 550), road1, LightState.GREEN, 5000, 2000, 5000);
+        TrafficLight light2 = new TrafficLight(new Coordinate(620, 250), road2, LightState.RED, 5000, 2000, 5000);
+        TrafficLight light3 = new TrafficLight(new Coordinate(620, 520), road3, LightState.RED, 5000, 2000, 5000);
+        TrafficLight light4 = new TrafficLight(new Coordinate(380, 280), road4, LightState.RED, 5000, 2000, 5000);
 
-        Stopline stopline1 = new Stopline(new Coordinate(280, 420), road1);
-        Stopline stopline2 = new Stopline(new Coordinate(650, 350), road2);
-        Stopline stopline3 = new Stopline(new Coordinate(550, 550), road3);
-        Stopline stopline4 = new Stopline(new Coordinate(450, 250), road4);
+        Stopline stopline1 = new Stopline(new Coordinate(400, 450), Orientation.VERTICAL, road1);
+        Stopline stopline2 = new Stopline(new Coordinate(600, 350), Orientation.VERTICAL, road2);
+        Stopline stopline3 = new Stopline(new Coordinate(550, 500), Orientation.HORIZONTAL, road3);
+        Stopline stopline4 = new Stopline(new Coordinate(450, 300), Orientation.HORIZONTAL, road4);
 
-        
         SimulationPanel panel = new SimulationPanel(1000,800);
 
         panel.addRoad(road1);

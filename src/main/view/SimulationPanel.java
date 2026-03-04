@@ -73,33 +73,12 @@ public class SimulationPanel extends JPanel {
         for (TrafficLight light : trafficLights) {
             light.update(30);
         }
-        int stopDistance = 50; // pixels
+        // make vehicle stop at red light and continue at green light
+        // Simple red/green behavior: stop vehicles when a red light is within a threshold, resume on green, and advance vehicles.
+        int stopDistance = 100; // pixels
 
-        for (Car v : vehicles) {
-            boolean stop = false;
-
-            TrafficLight matchedLight = v.obeyLight(trafficLights);
-            Stopline matchedLine = v.obeyLine(stoplines);
-
-            if (matchedLight != null && matchedLine != null && matchedLight.getState() == LightState.RED) {
-                Coordinate sl = matchedLine.getPosition();
-                double dx = (double) (sl.getX() - v.getX());
-                double dy = (double) (sl.getY() - v.getY());
-                double distance = Math.hypot(dx, dy);
-
-                if (distance <= stopDistance) {
-                    stop = true;
-                }
-            }
-
-            if (stop) {
-                v.setSpeed(0);
-            } else {
-                // restore previous speed
-                v.setSpeed(v.getPreviousSpeed());
-            }
-
-            v.move(1000, 800, v.getOrientation(), v.getRoad().getApproach());
+        for (Car c : vehicles) {
+            c.update(trafficLights, stoplines, 1000, 800);
         }
     }
 
@@ -120,8 +99,8 @@ public class SimulationPanel extends JPanel {
         }
 
         // Draw vehicles
-        for (Vehicles v : vehicles) {
-            Vehicles.drawVehicle(g2d, v);
+        for (Car c : vehicles) {
+            Car.drawVehicle(g2d, c);
         }
     }
 

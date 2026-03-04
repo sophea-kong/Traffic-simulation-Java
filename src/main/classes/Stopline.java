@@ -3,7 +3,7 @@ public class Stopline {
     private int id;
     private Coordinate position;
     private Road road;
-    // private Orientation orientation;
+    Orientation orientation;
     //int roadId;
 
     public Stopline(Coordinate position, Road road) {
@@ -11,6 +11,13 @@ public class Stopline {
         setRoad(road);
         this.id = Stopline.count++;
     }
+
+    public Stopline(Coordinate position, Orientation orientation, Road road) {
+        this.position = position;
+        this.orientation = orientation;
+        this.road = road;
+    }
+
 
     private void setPosition(Coordinate position) {
         if (position == null) {
