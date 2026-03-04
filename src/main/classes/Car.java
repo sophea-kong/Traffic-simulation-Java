@@ -1,3 +1,8 @@
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+
+
+
 enum Car_load {
     ONE_PERSON,
     TWO_PERSON,
@@ -5,20 +10,29 @@ enum Car_load {
     FOUR_PERSON
 }
 
-public class Car extends Vehicles implements Vehicle {
+public class Car extends Vehicles {
     private Car_load load;
+    private Color color;
 
+
+    
     Car(Orientation orientation, int x, int y, double speed, double curspeed, Road road, Car_load load) {
+
+
         super(orientation, x, y, 50, 30, speed, curspeed, road);
         this.load = load;
         //this.roadId = road.id;
     }
     Car(Orientation orientation, int x, int y, int roadId ) {
+
+
         super(orientation, x, y, 50, 30, 6.0, 0, null);
         //this.roadId = roadId;
         this.load = Car_load.ONE_PERSON;
     }
     Car(Road road) {
+
+
         super((road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL,
               (idToX(road.getId())),
               (road.getId() == 1) ? 450 : (road.getId() == 2) ? 350 : (road.getId() == 3) ? 750 : 50,
@@ -77,52 +91,6 @@ public class Car extends Vehicles implements Vehicle {
         return speedIncrease;
     }
 
-    @Override
-    public void move(int windowsWidth, int windowHeight) {
-        this.setCurspeed(this.getCurspeed() + accelerate());
-        if (this.getCurspeed() > this.getSpeed()) {
-            this.setCurspeed(this.getSpeed());
-        }
-        for(int i = 0; i < (int)this.getCurspeed(); i++) {
-            if (this.getRoad().getApproach() == Approach.SOUTH) {
-            //use setX method to move left to right and wrap around
-            setX(this.getPosition().getX() - this.getCurspeed());
-            if (this.getPosition().getX() > windowsWidth) {
-                setX(-this.getwidth()); // Wrap around to the left
-            }
-        } else if (this.getRoad().getApproach() == Approach.EAST){
-            setY(this.getPosition().getY() + this.getCurspeed());
-            if (this.getPosition().getY() > windowHeight) {
-                setY(-this.getheight()); // Wrap around to the top
-            }
-        } else if (this.getRoad().getApproach() == Approach.WEST){
-            setY(this.getPosition().getY() - this.getCurspeed());
-            if (this.getPosition().getY() < 0) {
-                setY(this.getheight()); // Wrap around to the bottom
-            }
-        } else {
-            setX(this.getPosition().getX() + this.getCurspeed());
-            if (this.getPosition().getX() < 0) {
-                setX(this.getwidth()); // Wrap around to the right
-            }
-        }
-        }
-    }
-
-    public void setSpeedToZero() {
-        this.setCurspeed(0);
-    }
-
-    // save the previous speed before stopping ( becuase stopping in main file mean that the speed is 0 so without saving previous speed we cant resume to previous speed)
-    private double previousSpeed = this.getSpeed();
-
-    public void setPreviousSpeed(double speed) {
-        this.previousSpeed = speed;
-    }
-
-    public double getPreviousSpeed() {
-        return this.previousSpeed;
-    }
 
     public static Car create_car(Road road){
         if (road.getApproach() == Approach.NORTH) {
@@ -146,6 +114,41 @@ public class Car extends Vehicles implements Vehicle {
         } else {
             return new Car(Orientation.VERTICAL, 450, 0, 5.0, 5.0, null, Car_load.THREE_PERSON);
         }
+    }
+
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void render(Graphics2D g2d, boolean vertical) {
+        // Save original transform
+        AffineTransform oldTx = g2d.getTransform();
+
+        // Compute center of the car to rotate around its center
+        double cx = this.getX() + this.getwidth() / 2.0;
+        double cy = this.getY() + this.getheight() / 2.0;
+
+        // Rotate 90 degrees (π/2) when vertical; 0 when horizontal
+        double angle = vertical ? Math.PI / 2.0 : 0.0;
+        g2d.rotate(angle, cx, cy);
+
+        // Draw body
+        g2d.setColor(this.color != null ? this.color : Color.RED);
+        g2d.fillRect((int) this.getX(), (int) this.getY(), this.getwidth(), this.getheight());
+
+        // Draw windows
+        g2d.setColor(Color.CYAN);
+        g2d.fillRect((int) (this.getX() + 5), (int) (this.getY() + 5), 8, 8);
+        g2d.fillRect((int) (this.getX() + this.getwidth() - 13), (int) (this.getY() + 5), 8, 8);
+
+        // Draw wheels
+        g2d.setColor(Color.BLACK);
+        g2d.fillOval((int) (this.getX() + 5), (int) (this.getY() + this.getheight() - 8), 6, 6);
+        g2d.fillOval((int) (this.getX() + this.getwidth() - 11), (int) (this.getY() + this.getheight() - 8), 6, 6);
+
+        // Restore original transform
+        g2d.setTransform(oldTx);
     }
 
 }

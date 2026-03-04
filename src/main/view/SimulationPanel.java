@@ -6,7 +6,7 @@ import java.util.List;
 public class SimulationPanel extends JPanel {
     private List<Renderable> roads = new ArrayList<>();
     private List<TrafficLight> trafficLights = new ArrayList<>();
-    private List<Vehicle> vehicles = new ArrayList<>();
+    private List<Vehicles> vehicles = new ArrayList<>();
     private List<Stopline> stoplines = new ArrayList<>();
 
     public SimulationPanel(int windowWidth, int windowHeight) {
@@ -75,7 +75,7 @@ public class SimulationPanel extends JPanel {
         }
         int stopDistance = 50; // pixels
 
-        for (Vehicle v : vehicles) {
+        for (Vehicles v : vehicles) {
             boolean stop = false;
             TrafficLight matchedLight = null;
             Stopline matchedLine = null;
@@ -117,24 +117,18 @@ public class SimulationPanel extends JPanel {
             if (road instanceof Road r) {
                 vertical = r.getOrientation() == Orientation.VERTICAL;
             }
-            if(road instanceof Renderable r){
-                r.render(g2d, vertical);
-            }
+            road.render(g2d, vertical);
         }
 
         // Draw traffic lights
         for (TrafficLight light : trafficLights) {
-            if (light instanceof Renderable r) {
-                 r.render(g2d, false);
-            }
+            light.render(g2d, false);
         }
 
         // Draw vehicles
-        for (Vehicle v : vehicles) {
+        for (Vehicles v : vehicles) {
             boolean vertical = false;
-            if (v instanceof Car c) {
-                vertical = c.getOrientation() == Orientation.VERTICAL;
-            }
+            vertical = v.getOrientation() == Orientation.VERTICAL;
             if(v instanceof Renderable r){
              r.render(g2d, vertical);
             }
@@ -159,14 +153,16 @@ public class SimulationPanel extends JPanel {
         trafficLights.add(light);
     }
 
-    void addVehicle(int roadId) {
-        vehicles.add(new Car(findRoadbyId(roadId)));
+    void addVehicle(int roadId,Color color) {
+        Car car = new Car(findRoadbyId(roadId));
+        car.setColor(color);
+        vehicles.add(car);
     }
 
-    void addLight(int x, int y, int roadId, LightState state, int greenMs, int yellowMs, int redMs) {
+    void addLight(int x, int y, int roadId, LightState state) {
         Road road = findRoadbyId(roadId);
         if (road != null) {
-            trafficLights.add(new TrafficLight(new Coordinate(x, y), road, state, greenMs, yellowMs, redMs));
+            trafficLights.add(new TrafficLight(new Coordinate(x, y), road, state, 3000, 1000, 4000));
         }
     }
 

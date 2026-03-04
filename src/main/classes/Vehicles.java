@@ -1,9 +1,7 @@
 import java.util.List;
 import java.awt.Graphics2D;
-import java.awt.Color;
-import java.awt.geom.AffineTransform;
 
-public class Vehicles implements Renderable{
+public class Vehicles implements Renderable {
     private static int vehicleCount = 1;
     private int vehicleId;
     private Coordinate position;
@@ -23,55 +21,63 @@ public class Vehicles implements Renderable{
         setCurspeed(curspeed);
         setRoad(road);
         this.vehicleId = vehicleCount++;
+        this.previousSpeed = this.speed;
     }
 
     Vehicles(Road road) {
         this.orientation = (road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL;
         this.position = new Coordinate((road.getId() == 1) ? 500.0 : (road.getId() == 2) ? 600.0 : 500.0,
-                                      (road.getId() == 1) ? 450.0 : (road.getId() == 2) ? 400.0 : (road.getId() == 3) ? 750.0 : 50.0);
+                (road.getId() == 1) ? 450.0 : (road.getId() == 2) ? 400.0 : (road.getId() == 3) ? 750.0 : 50.0);
         setWidth(50);
         setHeight(30);
         setSpeed(6.0);
         setCurspeed(0);
         setRoad(road);
         this.vehicleId = vehicleCount++;
+        this.previousSpeed = this.speed;
     }
 
-    Vehicles(Road road,double speed) {
+    Vehicles(Road road, double speed) {
         this.orientation = (road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL;
         this.position = new Coordinate((road.getId() == 1) ? 500.0 : (road.getId() == 2) ? 600.0 : 500.0,
-                                      (road.getId() == 1) ? 450.0 : (road.getId() == 2) ? 400.0 : (road.getId() == 3) ? 750.0 : 50.0);
+                (road.getId() == 1) ? 450.0 : (road.getId() == 2) ? 400.0 : (road.getId() == 3) ? 750.0 : 50.0);
         setWidth(50);
         setHeight(30);
         setSpeed(speed);
         setCurspeed(0);
         setRoad(road);
         this.vehicleId = vehicleCount++;
+        this.previousSpeed = this.speed;
     }
 
-    public void move(int windowsWidth, int windowHeight, Orientation orientation, Approach approach) {
-        // the curspeed is used to move the vehicle
-        if (approach == Approach.SOUTH) {
-            // use setX method to move left to right and wrap around
-            setX(position.getX() - curspeed);
-            if (position.getX() > windowsWidth) {
-                setX(-width); // Wrap around to the left
+    public void move(int windowsWidth, int windowHeight) {
+        this.setCurspeed(this.getCurspeed() + accelerate());
+        if (this.getCurspeed() > this.getSpeed()) {
+            this.setCurspeed(this.getSpeed());
+        }
+        for(int i = 0; i < (int)this.getCurspeed(); i++) {
+            if (this.getRoad().getApproach() == Approach.SOUTH) {
+            //use setX method to move left to right and wrap around
+            setX(this.getPosition().getX() - this.getCurspeed());
+            if (this.getPosition().getX() > windowsWidth) {
+                setX(-this.getwidth()); // Wrap around to the left
             }
-        } else if (approach == Approach.EAST) {
-            setY(position.getY() - curspeed);
-            if (position.getY() > windowHeight) {
-                setY(-height); // Wrap around to the top
+        } else if (this.getRoad().getApproach() == Approach.EAST){
+            setY(this.getPosition().getY() + this.getCurspeed());
+            if (this.getPosition().getY() > windowHeight) {
+                setY(-this.getheight()); // Wrap around to the top
             }
-        } else if (approach == Approach.WEST) {
-            setY(position.getY() + curspeed);
-            if (position.getY() < 0) {
-                setY(windowHeight); // Wrap around to the bottom
+        } else if (this.getRoad().getApproach() == Approach.WEST){
+            setY(this.getPosition().getY() - this.getCurspeed());
+            if (this.getPosition().getY() < 0) {
+                setY(this.getheight()); // Wrap around to the bottom
             }
         } else {
-            setX(position.getX() + curspeed);
-            if (position.getX() < 0) {
-                setX(windowsWidth); // Wrap around to the right
+            setX(this.getPosition().getX() + this.getCurspeed());
+            if (this.getPosition().getX() < 0) {
+                setX(this.getwidth()); // Wrap around to the right
             }
+        }
         }
     }
 
@@ -92,7 +98,6 @@ public class Vehicles implements Renderable{
         this.road = road;
     }
 
-
     public int getVehicleId() {
         return this.vehicleId;
     }
@@ -106,7 +111,7 @@ public class Vehicles implements Renderable{
     }
 
     public void setCurspeed(double curspeed) {
-        if(curspeed > speed) {
+        if (curspeed > speed) {
             curspeed = speed;
         } else if (curspeed < 0) {
             curspeed = 0;
@@ -114,6 +119,12 @@ public class Vehicles implements Renderable{
         this.curspeed = curspeed;
     }
 
+
+    public void setSpeedToZero() {
+        this.setCurspeed(0);
+    }
+
+    
     public int getwidth() {
         return width;
     }
@@ -135,6 +146,7 @@ public class Vehicles implements Renderable{
         }
         this.height = height;
     }
+
     public int getheight() {
         return height;
     }
@@ -146,7 +158,6 @@ public class Vehicles implements Renderable{
     public void stop() {
         this.curspeed = 0;
     }
-
 
     public double getSpeed() {
         return this.speed;
@@ -220,37 +231,62 @@ public class Vehicles implements Renderable{
         return null;
     }
 
+    private double previousSpeed;
+
+    public void setPreviousSpeed(double speed) {
+        this.previousSpeed = speed;
+    }
+
+    public double getPreviousSpeed() {
+        return this.previousSpeed;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Vehicles other = (Vehicles) obj;
+        return vehicleId == other.vehicleId;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Vehicle " + vehicleId + " at (" + position.getX() + ", " + position.getY() + ") with speed " + speed;
+    }
+
 
 
     public void render(Graphics2D g2d, boolean vertical) {
-        // Save original transform
-        AffineTransform oldTx = g2d.getTransform();
+    //     // Save original transform
+    //     AffineTransform oldTx = g2d.getTransform();
 
-        // Compute center of the car to rotate around its center
-        double cx = this.getX() + this.width / 2.0;
-        double cy = this.getY() + this.height / 2.0;
+    //     // Compute center of the car to rotate around its center
+    //     double cx = this.getX() + this.width / 2.0;
+    //     double cy = this.getY() + this.height / 2.0;
 
-        // Rotate 90 degrees (π/2) when vertical; 0 when horizontal
-        double angle = vertical ? Math.PI / 2.0 : 0.0;
-        g2d.rotate(angle, cx, cy);
+    //     // Rotate 90 degrees (π/2) when vertical; 0 when horizontal
+    //     double angle = vertical ? Math.PI / 2.0 : 0.0;
+    //     g2d.rotate(angle, cx, cy);
 
-        // Draw body
-        g2d.setColor(Color.RED);
-        g2d.fillRect((int)this.getX(), (int)this.getY(), this.width, this.height);
+    //     // Draw body
+    //     g2d.setColor(Color.RED);
+    //     g2d.fillRect((int) this.getX(), (int) this.getY(), this.width, this.height);
 
-        // Draw windows
-        g2d.setColor(Color.CYAN);
-        g2d.fillRect((int)(this.getX() + 5), (int)(this.getY() + 5), 8, 8);
-        g2d.fillRect((int)(this.getX() + this.width - 13), (int)(this.getY() + 5), 8, 8);
+    //     // Draw windows
+    //     g2d.setColor(Color.CYAN);
+    //     g2d.fillRect((int) (this.getX() + 5), (int) (this.getY() + 5), 8, 8);
+    //     g2d.fillRect((int) (this.getX() + this.width - 13), (int) (this.getY() + 5), 8, 8);
 
-        // Draw wheels
-        g2d.setColor(Color.BLACK);
-        g2d.fillOval((int)(this.getX() + 5), (int)(this.getY() + this.height - 8), 6, 6);
-        g2d.fillOval((int)(this.getX() + this.width - 11), (int)(this.getY() + this.height - 8), 6, 6);
+    //     // Draw wheels
+    //     g2d.setColor(Color.BLACK);
+    //     g2d.fillOval((int) (this.getX() + 5), (int) (this.getY() + this.height - 8), 6, 6);
+    //     g2d.fillOval((int) (this.getX() + this.width - 11), (int) (this.getY() + this.height - 8), 6, 6);
 
-        // Restore original transform
-        g2d.setTransform(oldTx);
+    //     // Restore original transform
+    //     g2d.setTransform(oldTx);
     }
-
 
 }
