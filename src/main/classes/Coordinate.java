@@ -16,20 +16,10 @@ public class Coordinate {
     }
 
     public void setX(double x) {
-        if (x < 0) {
-            x = 0;
-        } else if (x > 1000) {
-            x = 1000;
-        }
         this.x = x;
     }
 
     public void setY(double y) {
-        if(y < 0){
-            y = 0;
-        } else if ( y > 1000){
-            y = 1000;
-        }
         this.y = y;
     }
     
