@@ -181,6 +181,7 @@ public class SimulationPanel extends JPanel {
     }
 
     private void performTurn(Car v) {
+        // need refactor to be more elegant but it works for now
         Approach currentApp = v.getRoad().getApproach();
         TurnDirection dir = v.getTurnDirection();
         
@@ -228,7 +229,9 @@ public class SimulationPanel extends JPanel {
         for (Vehicles v : vehicles) v.render(g2d, v.getOrientation() == Orientation.VERTICAL);
     }
 
-    void addRoad(Road road) { roads.add(road); }
+    void addRoad(Road road) { 
+        roads.add(road); 
+    }
     void addTrafficLight(TrafficLight light) { trafficLights.add(light); }
     void addVehicle(Car car) { vehicles.add(car); }
     void addstopline(Stopline line) { stoplines.add(line); }
