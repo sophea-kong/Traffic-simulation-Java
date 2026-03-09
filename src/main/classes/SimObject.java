@@ -1,4 +1,4 @@
-public class Object {
+public class SimObject {
     protected int id;
     protected Coordinate position;
     protected int height;
@@ -38,25 +38,25 @@ public class Object {
         this.width = width;
     } 
 
-    public Object() {
+    public SimObject() {
         this.position = new Coordinate(0, 0);
         this.height = 10;
         this.width = 10;
-        this.id = Object.count++;
+        this.id = SimObject.count++;
     }
 
-    public Object(int height, int width) {
+    public SimObject(int height, int width) {
         setHeight(height);
         setWidth(width);
         this.position = new Coordinate(0, 0);
-        this.id = Object.count++;
+        this.id = SimObject.count++;
     }
 
-    public Object(Coordinate position, int height, int width) {
+    public SimObject(Coordinate position, int height, int width) {
         setPosition(position);
         setHeight(height);
         setWidth(width);
-        this.id = Object.count++;
+        this.id = SimObject.count++;
     }
 
     public int getId() {

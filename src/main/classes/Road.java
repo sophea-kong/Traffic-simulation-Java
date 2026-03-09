@@ -15,7 +15,7 @@ public class Road extends InanimatedObject implements Renderable {
     private Orientation orientation;
     private Approach approach;
 
-    private int lenght;
+    private int length;
     private int roadWidth;
     private int laneCount;
     private int stopLineOffset;
@@ -24,28 +24,28 @@ public class Road extends InanimatedObject implements Renderable {
     private Color laneMark = new Color(255, 255, 255);
     private Color stopLineColor = new Color(255, 235, 235);
 
-    Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
+    Road(int cx, int cy, Orientation orientation, Approach approach, int length, int roadWidth,
             int laneCount, int stopLineOffset) {
         super(new Coordinate(cx, cy), 
-              (orientation == Orientation.HORIZONTAL) ? lenght : roadWidth,
-              (orientation == Orientation.HORIZONTAL) ? roadWidth : lenght);
+              (orientation == Orientation.HORIZONTAL) ? length : roadWidth,
+              (orientation == Orientation.HORIZONTAL) ? roadWidth : length);
         this.orientation = orientation;
         this.approach = approach;
-        setLenght(lenght);
+        setLength(length);
         setRoadWidth(roadWidth);
         setLaneCount(laneCount);
         setStopLineOffset(stopLineOffset);
     }
 
 
-    Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
+    Road(int cx, int cy, Orientation orientation, Approach approach, int length, int roadWidth,
             int laneCount, int stopLineOffset, int id) {
         super(new Coordinate(cx, cy), 
-              (orientation == Orientation.HORIZONTAL) ? lenght : roadWidth,
-              (orientation == Orientation.HORIZONTAL) ? roadWidth : lenght);
+              (orientation == Orientation.HORIZONTAL) ? length : roadWidth,
+              (orientation == Orientation.HORIZONTAL) ? roadWidth : length);
         this.orientation = orientation;
         this.approach = approach;
-        setLenght(lenght);
+        setLength(length);
         setRoadWidth(roadWidth);
         setLaneCount(laneCount);
         setStopLineOffset(stopLineOffset);
@@ -56,7 +56,7 @@ public class Road extends InanimatedObject implements Renderable {
               (orientation == Orientation.HORIZONTAL) ? 200 : 600);
         this.orientation = orientation;
         this.approach = approach;
-        this.lenght = 600;
+        this.length = 600;
         this.roadWidth = 200;
         this.laneCount = 2;
         this.stopLineOffset = stopLineOffset;
@@ -67,7 +67,7 @@ public class Road extends InanimatedObject implements Renderable {
         this.width = (orientation == Orientation.HORIZONTAL) ? 600 : 200;
         this.height = (orientation == Orientation.HORIZONTAL) ? 200 : 600;
         this.approach = approach;
-        this.lenght = 600;  
+        this.length = 600;  
         this.roadWidth = 200;
         this.laneCount = 2;
         this.stopLineOffset = (approach == Approach.NORTH || approach == Approach.EAST) ? 200 : -200;
@@ -78,7 +78,7 @@ public class Road extends InanimatedObject implements Renderable {
         this.width = (orientation == Orientation.HORIZONTAL) ? 600 : 200;
         this.height = (orientation == Orientation.HORIZONTAL) ? 200 : 600;
         this.approach = (id == 1) ? Approach.SOUTH : (id == 2) ? Approach.NORTH : (id == 3) ? Approach.EAST : Approach.WEST;
-        this.lenght = 600;  
+        this.length = 600;  
         this.roadWidth = 200;
         this.laneCount = 2;
         this.stopLineOffset = (this.approach == Approach.SOUTH || this.approach == Approach.WEST) ? 200 : -200;
@@ -86,10 +86,10 @@ public class Road extends InanimatedObject implements Renderable {
 
 
     private void setStopLineOffset(int stopLineOffset) {
-        if (stopLineOffset < -this.lenght / 2) {
-            stopLineOffset = -this.lenght / 2;
-        } else if (stopLineOffset > this.lenght / 2) {
-            stopLineOffset = this.lenght / 2;
+        if (stopLineOffset < -this.length / 2) {
+            stopLineOffset = -this.length / 2;
+        } else if (stopLineOffset > this.length / 2) {
+            stopLineOffset = this.length / 2;
         }
         this.stopLineOffset = stopLineOffset;
     }
@@ -114,46 +114,47 @@ public class Road extends InanimatedObject implements Renderable {
 
 
 
-    private void setLenght(int lenght) {
-        if (lenght < 0) {
-            lenght = 0;
-        } else if (lenght > 2000) {
-            lenght = 2000;
+    private void setLength(int length) {
+        if (length < 0) {
+            length = 0;
+        } else if (length > 2000) {
+            length = 2000;
         }
-        this.lenght = lenght;
+        this.length = length;
     }
 
     public Approach getApproach() {
         return this.approach;
     }
 
-    public void render(Graphics2D g2d, boolean vertical) {
+    @Override
+    public void render(Graphics2D g2d) {
         // Draw road background
         g2d.setColor(this.asphaltColor);
 
         if (this.orientation == Orientation.HORIZONTAL) {
-            g2d.fillRect((int) this.position.getX() - this.lenght / 2, (int) this.position.getY() - this.roadWidth / 2,
-                    this.lenght, this.roadWidth);
+            g2d.fillRect((int) this.position.getX() - this.length / 2, (int) this.position.getY() - this.roadWidth / 2,
+                    this.length, this.roadWidth);
 
             // Draw lane markings
             g2d.setColor(this.laneMark);
             for (int i = this.roadWidth / this.laneCount; i < this.roadWidth; i += this.roadWidth / this.laneCount) {
-                g2d.drawLine((int) this.position.getX() - this.lenght / 2,
+                g2d.drawLine((int) this.position.getX() - this.length / 2,
                         (int) (this.position.getY() - this.roadWidth / 2 + i),
-                        (int) this.position.getX() + this.lenght / 2,
+                        (int) this.position.getX() + this.length / 2,
                         (int) (this.position.getY() - this.roadWidth / 2 + i));
             }
         } else {
-            g2d.fillRect((int) this.position.getX() - this.roadWidth / 2, (int) this.position.getY() - this.lenght / 2,
-                    this.roadWidth, this.lenght);
+            g2d.fillRect((int) this.position.getX() - this.roadWidth / 2, (int) this.position.getY() - this.length / 2,
+                    this.roadWidth, this.length);
 
             // Draw lane markings
             g2d.setColor(this.laneMark);
             for (int i = this.roadWidth / this.laneCount; i < this.roadWidth; i += this.roadWidth / this.laneCount) {
                 g2d.drawLine((int) (this.position.getX() - this.roadWidth / 2 + i),
-                        (int) this.position.getY() - this.lenght / 2,
+                        (int) this.position.getY() - this.length / 2,
                         (int) (this.position.getX() - this.roadWidth / 2 + i),
-                        (int) this.position.getY() + this.lenght / 2);
+                        (int) this.position.getY() + this.length / 2);
             }
         }
 
@@ -172,3 +173,5 @@ public class Road extends InanimatedObject implements Renderable {
         }
     }
 }
+
+

@@ -1,5 +1,5 @@
-public class AnimatedObject extends Object{
-    public AnimatedObject(Object object) {
+public class AnimatedObject extends SimObject{
+    public AnimatedObject(SimObject object) {
         super(object.getPosition(),object.getHeight(), object.getWidth());
     }
 

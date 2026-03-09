@@ -1,5 +1,5 @@
-public class InanimatedObject extends Object {
-    public InanimatedObject(Object object) {
+public class InanimatedObject extends SimObject {
+    public InanimatedObject(SimObject object) {
         super(object.getPosition(), object.getHeight(), object.getWidth());
     }
 

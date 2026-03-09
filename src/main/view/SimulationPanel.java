@@ -6,7 +6,7 @@ import java.util.List;
 public class SimulationPanel extends JPanel {
     private List<Road> roads = new ArrayList<>();
     private List<TrafficLight> trafficLights = new ArrayList<>();
-    private List<Car> vehicles = new ArrayList<>();
+    private List<Vehicle> vehicles = new ArrayList<>();
     private List<Stopline> stoplines = new ArrayList<>();
 
     public SimulationPanel(int windowWidth, int windowHeight) {
@@ -23,8 +23,8 @@ public class SimulationPanel extends JPanel {
         for (TrafficLight light : trafficLights) updateTrafficLight(light, 30);
         int stopDistance = 50; 
 
-        for (Car v : vehicles) {
-            // Acceleration logic (moved from Car.accelerate)
+        for (Vehicle v : vehicles) {
+            // Acceleration logic (moved from Vehicle.accelerate)
             double speedIncrease = 0.2;
             if (v.getCurspeed() >= v.getSpeed()) speedIncrease = 0.0;
             v.setCurspeed(v.getCurspeed() + speedIncrease);
@@ -40,7 +40,7 @@ public class SimulationPanel extends JPanel {
             }
 
             if (!stop) {
-                for (Car other : vehicles) {
+                for (Vehicle other : vehicles) {
                     if (v == other) continue;
                     // Proximity check on same road
                     if (v.getRoad().getApproach() == other.getRoad().getApproach() && v.getPosition()!=null && other.getPosition()!=null) {
@@ -98,7 +98,7 @@ public class SimulationPanel extends JPanel {
         }
     }
 
-    private void moveVehicle(Vehicles v, int windowsWidth, int windowHeight) {
+    private void moveVehicle(Vehicle v, int windowsWidth, int windowHeight) {
         Approach approach = v.getRoad().getApproach();
         double curspeed = v.getCurspeed();
 
@@ -136,7 +136,7 @@ public class SimulationPanel extends JPanel {
         }
     }
 
-    private void resetVehicle(Vehicles v) {
+    private void resetVehicle(Vehicle v) {
         v.setX(v.getSpawnPosition().getX());
         v.setY(v.getSpawnPosition().getY());
         v.setRoad(v.getOriginalRoad());
@@ -146,15 +146,15 @@ public class SimulationPanel extends JPanel {
         v.setTurnDirection(TurnDirection.values()[new java.util.Random().nextInt(3)]);
     }
 
-    private double distanceToPoint(Vehicles v, double x, double y) {
+    private double distanceToPoint(Vehicle v, double x, double y) {
         return Math.hypot(x - v.getX(), y - v.getY());
     }
 
-    private double distanceToVehicles(Vehicles v1, Vehicles v2) {
+    private double distanceToVehicles(Vehicle v1, Vehicle v2) {
         return Math.hypot(v2.getX() - v1.getX(), v2.getY() - v1.getY());
     }
 
-    private boolean isBehind(Vehicles v, Vehicles other) {
+    private boolean isBehind(Vehicle v, Vehicle other) {
         if (v.getRoad() == null || other.getRoad() == null) return false;
         Approach approach = v.getRoad().getApproach();
         if (approach == Approach.SOUTH) return other.getX() > v.getX();
@@ -164,7 +164,7 @@ public class SimulationPanel extends JPanel {
         return false;
     }
 
-    private TrafficLight obeyLight(Vehicles v, List<TrafficLight> all_TrafficLight) {
+    private TrafficLight obeyLight(Vehicle v, List<TrafficLight> all_TrafficLight) {
         if (v.getRoad() == null) return null;
         for (TrafficLight light : all_TrafficLight) {
             if (light.getRoad().getApproach() == v.getRoad().getApproach()) return light;
@@ -172,7 +172,7 @@ public class SimulationPanel extends JPanel {
         return null;
     }
 
-    private Stopline obeyLine(Vehicles v, List<Stopline> all_line) {
+    private Stopline obeyLine(Vehicle v, List<Stopline> all_line) {
         if (v.getRoad() == null) return null;
         for (Stopline line : all_line) {
             if (line.getRoad().getApproach() == v.getRoad().getApproach()) return line;
@@ -180,7 +180,7 @@ public class SimulationPanel extends JPanel {
         return null;
     }
 
-    private void performTurn(Car v) {
+    private void performTurn(Vehicle v) {
         // need refactor to be more elegant but it works for now
         Approach currentApp = v.getRoad().getApproach();
         TurnDirection dir = v.getTurnDirection();
@@ -224,15 +224,14 @@ public class SimulationPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        for (Road road : roads) road.render(g2d, true);
-        for (TrafficLight light : trafficLights) light.render(g2d, true);
-        for (Vehicles v : vehicles) v.render(g2d, v.getOrientation() == Orientation.VERTICAL);
+        for (Road road : roads) road.render(g2d);
+        for (TrafficLight light : trafficLights) light.render(g2d);
+        for (Vehicle v : vehicles) v.render(g2d);
     }
-
     void addRoad(Road road) { 
         roads.add(road); 
     }
     void addTrafficLight(TrafficLight light) { trafficLights.add(light); }
-    void addVehicle(Car car) { vehicles.add(car); }
+    void addVehicle(Vehicle vehicle) { vehicles.add(vehicle); }
     void addstopline(Stopline line) { stoplines.add(line); }
 }

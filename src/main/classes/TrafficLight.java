@@ -228,8 +228,8 @@ public class TrafficLight extends AnimatedObject implements Updatable, Renderabl
         
     }
 
-
-    public void render(Graphics2D g2d, boolean vertical) {
+    @Override
+    public void render(Graphics2D g2d) {
         Color lightColor = switch (this.getState()) {
             case RED -> Color.RED;
             case YELLOW -> Color.YELLOW;
