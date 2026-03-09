@@ -22,14 +22,14 @@ public class TrafficSimulationApp extends JFrame {
         panel.addVehicle(new Car(Orientation.HORIZONTAL, Approach.SOUTH, -300, 450, 7.0, 7.0, road1, Car_load.ONE_PERSON));
         panel.addVehicle(new Car(Orientation.HORIZONTAL, Approach.SOUTH, -450, 450, 4.5, 4.5, road1, Car_load.THREE_PERSON));
         panel.addVehicle(new Motorcycle(Orientation.HORIZONTAL, Approach.SOUTH, -200, 450, 7.0, 7.0, road1));
-        
+        panel.addVehicle(new Ambulance(Orientation.HORIZONTAL, Approach.SOUTH, -250, 450, 8.0, 8.0, road1));
         // Road 2: North (Left)
         panel.addVehicle(new Car(Orientation.HORIZONTAL, Approach.NORTH, 950, 350, 5.5, 5.5, road2, Car_load.THREE_PERSON));
         panel.addVehicle(new Car(Orientation.HORIZONTAL, Approach.NORTH, 1100, 350, 7.5, 7.5, road2, Car_load.ONE_PERSON));
         panel.addVehicle(new Car(Orientation.HORIZONTAL, Approach.NORTH, 1250, 350, 4.2, 4.2, road2, Car_load.FOUR_PERSON));
         panel.addVehicle(new Car(Orientation.HORIZONTAL, Approach.NORTH, 1400, 350, 6.8, 6.8, road2, Car_load.TWO_PERSON));
         panel.addVehicle(new Car(Orientation.HORIZONTAL, Approach.NORTH, 1550, 350, 5.0, 5.0, road2, Car_load.ONE_PERSON));
-
+        
         // Road 3: West (Up)
         panel.addVehicle(new Car(Orientation.VERTICAL, Approach.WEST, 550, 750, 5.0, 5.0, road3, Car_load.FOUR_PERSON));
         panel.addVehicle(new Car(Orientation.VERTICAL, Approach.WEST, 550, 950, 6.5, 6.5, road3, Car_load.TWO_PERSON));
