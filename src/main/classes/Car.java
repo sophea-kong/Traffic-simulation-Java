@@ -12,8 +12,11 @@ public class Car extends Vehicle {
     private Car_load load;
     private double previousSpeed = 6.0;
 
-    Car(Orientation orientation, Approach approach, int x, int y, double speed, double curspeed, Road road, Car_load load) {
-        super(orientation, approach, x, y, 30, 50, speed, curspeed, road);
+
+    public boolean isLawEnforced(Action action) { return true; }
+    
+    Car(Orientation orientation, double speed, double curspeed, Road road, Car_load load) {
+        super(orientation, 30, 50, speed, curspeed, road);
         this.load = load;
         this.previousSpeed = speed;
         loadSprite();
@@ -37,6 +40,8 @@ public class Car extends Vehicle {
 
     public void setPreviousSpeed(double speed) { this.previousSpeed = speed; }
     public double getPreviousSpeed() { return this.previousSpeed; }
+    public Car_load getLoad() { return load; }
+    public void setLoad(Car_load load) { this.load = load; }
 
     public static Car create_car(Road road){
         return new Car(road);
