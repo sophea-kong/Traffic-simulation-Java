@@ -22,12 +22,21 @@ public class Coordinate {
     public void setY(double y) {
         this.y = y;
     }
-    
-    int compareTo(Coordinate other) {
-        // comparison logic
-        if (this.x != other.x) {
-            return Double.compare(this.x, other.x);
-        }
-        return Double.compare(this.y, other.y);
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordinate that = (Coordinate) o;
+        return Double.compare(that.x, x) == 0 && Double.compare(that.y, y) == 0;
     }
+
+    @Override
+    public String toString() {
+        return "Coordinate{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
+    
 }

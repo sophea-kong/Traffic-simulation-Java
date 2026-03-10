@@ -75,4 +75,24 @@ public class TrafficLight extends InanimatedObject implements Updatable, Rendera
         g2d.setColor(lightColor);
         g2d.fillOval((int)pos.getX() - 5, (int)pos.getY() - 35 + (this.getState().ordinal() * 30), 20, 20);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        TrafficLight that = (TrafficLight) o;
+        return Float.compare(that.greenMs, greenMs) == 0 && Float.compare(that.yellowMs, yellowMs) == 0 && Float.compare(that.redMs, redMs) == 0 && Float.compare(that.elapsedMs, elapsedMs) == 0 && state == that.state && java.util.Objects.equals(road, that.road);
+    }
+
+
+    @Override
+    public String toString() {
+        return "TrafficLight{" +
+                "id=" + id +
+                ", state=" + state +
+                ", road=" + road +
+                ", elapsedMs=" + elapsedMs +
+                '}';
+    }
 }

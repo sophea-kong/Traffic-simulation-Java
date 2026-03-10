@@ -45,4 +45,21 @@ public class SimObject {
     public int getWidth() {
         return this.width;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SimObject simObject = (SimObject) o;
+        return id == simObject.id && height == simObject.height && width == simObject.width;
+    }
+
+    @Override
+    public String toString() {
+        return "SimObject{" +
+                "id=" + id +
+                ", height=" + height +
+                ", width=" + width +
+                '}';
+    }
 }

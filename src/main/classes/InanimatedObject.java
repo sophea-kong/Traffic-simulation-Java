@@ -20,4 +20,24 @@ public class InanimatedObject extends SimObject {
     public void setInteractable(boolean interactable) { isInteractable = interactable; }
     public boolean isCollidable() { return isCollidable; }
     public void setCollidable(boolean collidable) { isCollidable = collidable; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        InanimatedObject that = (InanimatedObject) o;
+        return isInteractable == that.isInteractable && isCollidable == that.isCollidable;
+    }
+
+    @Override
+    public String toString() {
+        return "InanimatedObject{" +
+                "id=" + id +
+                ", height=" + height +
+                ", width=" + width +
+                ", isInteractable=" + isInteractable +
+                ", isCollidable=" + isCollidable +
+                '}';
+    }
 }

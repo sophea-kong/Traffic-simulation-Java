@@ -124,8 +124,8 @@ public class SimulationPanel extends JPanel {
             }
         }
 
-        if (pos.getX() > windowsWidth + 100 || pos.getX() < -200 || 
-            pos.getY() > windowHeight + 100 || pos.getY() < -200) {
+        if (pos.getX() > windowsWidth + 1000 || pos.getX() < -1000 || 
+            pos.getY() > windowHeight + 1000 || pos.getY() < -1000) {
             resetVehicle(v, pos);
         }
     }

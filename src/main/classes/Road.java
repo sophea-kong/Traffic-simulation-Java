@@ -35,50 +35,7 @@ public class Road extends InanimatedObject implements Renderable {
         setLaneCount(laneCount);
         setStopLineOffset(stopLineOffset);
     }
-
-
-    Road(Orientation orientation, Approach approach, int length, int roadWidth,
-            int laneCount, int stopLineOffset, int id) {
-        super((orientation == Orientation.HORIZONTAL) ? roadWidth : length,
-              (orientation == Orientation.HORIZONTAL) ? length : roadWidth, true, true);
-        this.orientation = orientation;
-        this.approach = approach;
-        setLength(length);
-        setRoadWidth(roadWidth);
-        setLaneCount(laneCount);
-        setStopLineOffset(stopLineOffset);
-    }
-    Road (Orientation orientation, Approach approach, int stopLineOffset, int id) {
-        super((orientation == Orientation.HORIZONTAL) ? 200 : 600,
-              (orientation == Orientation.HORIZONTAL) ? 600 : 200, true, true);
-        this.orientation = orientation;
-        this.approach = approach;
-        this.length = 600;
-        this.roadWidth = 200;
-        this.laneCount = 2;
-        this.stopLineOffset = stopLineOffset;
-    }
-   Road (Approach approach, int id) {  
-        super((approach == Approach.NORTH || approach == Approach.SOUTH) ? 200 : 600,
-              (approach == Approach.NORTH || approach == Approach.SOUTH) ? 600 : 200, true, true);
-        this.orientation = (approach == Approach.NORTH || approach == Approach.SOUTH) ? Orientation.HORIZONTAL : Orientation.VERTICAL;
-        this.approach = approach;
-        this.length = 600;  
-        this.roadWidth = 200;
-        this.laneCount = 2;
-        this.stopLineOffset = (approach == Approach.NORTH || approach == Approach.EAST) ? 200 : -200;
-   } 
-   Road (int id) {
-        super((id == 1 || id == 2) ? 200 : 600,
-              (id == 1 || id == 2) ? 600 : 200, true, true);
-        this.orientation = (id == 1 || id == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL; 
-        this.approach = (id == 1) ? Approach.SOUTH : (id == 2) ? Approach.NORTH : (id == 3) ? Approach.EAST : Approach.WEST;
-        this.length = 600;  
-        this.roadWidth = 200;
-        this.laneCount = 2;
-        this.stopLineOffset = (this.approach == Approach.SOUTH || this.approach == Approach.WEST) ? 200 : -200;
-   }
-
+    
 
     private void setStopLineOffset(int stopLineOffset) {
         if (stopLineOffset < -this.length / 2) {
@@ -166,6 +123,26 @@ public class Road extends InanimatedObject implements Renderable {
                     (int) pos.getY() + this.stopLineOffset,
                     (int) pos.getX() + this.roadWidth / 2, (int) pos.getY() + this.stopLineOffset);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Road road = (Road) o;
+        return length == road.length && roadWidth == road.roadWidth && laneCount == road.laneCount && stopLineOffset == road.stopLineOffset && orientation == road.orientation && approach == road.approach;
+    }
+
+    @Override
+    public String toString() {
+        return "Road{" +
+                "id=" + id +
+                ", orientation=" + orientation +
+                ", approach=" + approach +
+                ", length=" + length +
+                ", roadWidth=" + roadWidth +
+                '}';
     }
 }
 

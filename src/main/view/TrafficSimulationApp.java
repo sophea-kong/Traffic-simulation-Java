@@ -84,4 +84,25 @@ public class TrafficSimulationApp extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new TrafficSimulationApp());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        TrafficSimulationApp that = (TrafficSimulationApp) o;
+        return java.util.Objects.equals(getTitle(), that.getTitle());
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(super.hashCode(), getTitle());
+    }
+
+    @Override
+    public String toString() {
+        return "TrafficSimulationApp{" +
+                "title='" + getTitle() + '\'' +
+                '}';
+    }
 }

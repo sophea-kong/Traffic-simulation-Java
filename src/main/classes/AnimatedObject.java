@@ -26,5 +26,26 @@ public class AnimatedObject extends SimObject{
     public Orientation getOrientation() { return this.orientation; }
     public void setOrientation(Orientation orientation) { this.orientation = orientation; }
 
-    public boolean canMoving() { return true; };
+    public boolean canMoving() { return true; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        AnimatedObject that = (AnimatedObject) o;
+        return Double.compare(that.speed, speed) == 0 && Double.compare(that.curspeed, curspeed) == 0 && orientation == that.orientation;
+    }
+    
+    @Override
+    public String toString() {
+        return "AnimatedObject{" +
+                "id=" + id +
+                ", height=" + height +
+                ", width=" + width +
+                ", speed=" + speed +
+                ", curspeed=" + curspeed +
+                ", orientation=" + orientation +
+                '}';
+    }
 }

@@ -44,4 +44,25 @@ public class Car extends Vehicle {
     public static Car create_car(Road road){
         return new Car(road);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Car car = (Car) o;
+        return Double.compare(car.previousSpeed, previousSpeed) == 0 && load == car.load;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", load=" + load +
+                ", previousSpeed=" + previousSpeed +
+                ", orientation=" + orientation +
+                ", approach=" + approach +
+                '}';
+    }
 }

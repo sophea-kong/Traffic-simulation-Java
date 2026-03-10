@@ -138,4 +138,28 @@ public abstract class Vehicle extends AnimatedObject implements Renderable, Upda
 
         g2d.setTransform(old);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return hasTurned == vehicle.hasTurned && isTurning == vehicle.isTurning && Double.compare(vehicle.turnTargetCoord, turnTargetCoord) == 0 && Double.compare(vehicle.currentAngle, currentAngle) == 0 && Double.compare(vehicle.targetAngle, targetAngle) == 0 && java.util.Objects.equals(spawnPosition, vehicle.spawnPosition) && java.util.Objects.equals(road, vehicle.road) && java.util.Objects.equals(originalRoad, vehicle.originalRoad) && turnDirection == vehicle.turnDirection && java.util.Objects.equals(position, vehicle.position) && approach == vehicle.approach;
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "id=" + id +
+                ", height=" + height +
+                ", width=" + width +
+                ", spawnPosition=" + spawnPosition +
+                ", road=" + road +
+                ", turnDirection=" + turnDirection +
+                ", hasTurned=" + hasTurned +
+                ", isTurning=" + isTurning +
+                ", approach=" + approach +
+                '}';
+    }
 }
