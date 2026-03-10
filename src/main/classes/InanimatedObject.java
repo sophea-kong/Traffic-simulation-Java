@@ -8,8 +8,9 @@ public class InanimatedObject extends SimObject {
         this.isCollidable = isCollidable;
     }
 
-    public InanimatedObject(int width, int height, boolean isInteractable, boolean isCollidable) {
-        super(width, height);
+    // Standardized to (height, width) to match SimObject
+    public InanimatedObject(int height, int width, boolean isInteractable, boolean isCollidable) {
+        super(height, width);
         this.isInteractable = isInteractable;
         this.isCollidable = isCollidable;
     }

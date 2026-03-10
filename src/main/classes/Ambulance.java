@@ -11,7 +11,7 @@ public class Ambulance extends Vehicle {
     @Override
     public void loadSprite() {
         try {
-            sprite = ImageIO.read(getClass().getResource("/images/emergency/ambulance.png"));
+            sprite = ImageIO.read(getClass().getResource("./images/emergency/ambulance.png"));
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);

@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import java.io.IOException;
+import java.awt.Graphics2D;
 
 enum Car_load {
     ONE_PERSON,
@@ -12,9 +13,6 @@ public class Car extends Vehicle {
     private Car_load load;
     private double previousSpeed = 6.0;
 
-
-    public boolean isLawEnforced(Action action) { return true; }
-    
     Car(Orientation orientation, double speed, double curspeed, Road road, Car_load load) {
         super(orientation, 30, 50, speed, curspeed, road);
         this.load = load;

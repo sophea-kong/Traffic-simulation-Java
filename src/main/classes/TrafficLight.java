@@ -14,7 +14,7 @@ public class TrafficLight extends InanimatedObject implements Updatable, Rendera
     private float elapsedMs = 0;
 
     TrafficLight(Road road, LightState state, float greenMs, float yellowMs, float redMs) {
-        super(40, 100, true, false);
+        super(100, 40, true, false);
         setRoad(road);
         this.state = state;
         this.greenMs = validateMs(greenMs);
@@ -23,7 +23,7 @@ public class TrafficLight extends InanimatedObject implements Updatable, Rendera
     }
 
     TrafficLight(Road road, LightState state) {
-        super(40, 100, true, false);
+        super(100, 40, true, false);
         setRoad(road);
         this.state = state;
         this.greenMs = 5000;

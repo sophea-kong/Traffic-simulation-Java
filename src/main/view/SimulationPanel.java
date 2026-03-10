@@ -7,8 +7,8 @@ import java.util.Map;
 public class SimulationPanel extends JPanel {
     private Map<Road, Coordinate> roads = new LinkedHashMap<>();
     private Map<TrafficLight, Coordinate> trafficLights = new LinkedHashMap<>();
-    private Map<Vehicles, Coordinate> vehicles = new LinkedHashMap<>();
-    private Map<Vehicles, Coordinate> vehicleSpawns = new LinkedHashMap<>();
+    private Map<Vehicle, Coordinate> vehicles = new LinkedHashMap<>();
+    private Map<Vehicle, Coordinate> vehicleSpawns = new LinkedHashMap<>();
     private Map<Stopline, Coordinate> stoplines = new LinkedHashMap<>();
 
     public SimulationPanel(int windowWidth, int windowHeight) {
@@ -25,7 +25,7 @@ public class SimulationPanel extends JPanel {
         for (TrafficLight light : trafficLights.keySet()) updateTrafficLight(light, 30);
         int stopDistance = 50; 
 
-        for (Vehicles v : vehicles.keySet()) {
+        for (Vehicle v : vehicles.keySet()) {
             Coordinate pos = vehicles.get(v);
             
             double speedIncrease = 0.2;
@@ -43,7 +43,7 @@ public class SimulationPanel extends JPanel {
             }
 
             if (!stop) {
-                for (Vehicles other : vehicles.keySet()) {
+                for (Vehicle other : vehicles.keySet()) {
                     if (v == other) continue;
                     Coordinate otherPos = vehicles.get(other);
                     if (v.getRoad().getApproach() == other.getRoad().getApproach()) {
@@ -95,7 +95,7 @@ public class SimulationPanel extends JPanel {
     }
 
 
-    private void moveVehicle(Vehicles v, Coordinate pos, int windowsWidth, int windowHeight) {
+    private void moveVehicle(Vehicle v, Coordinate pos, int windowsWidth, int windowHeight) {
         Approach approach = v.getRoad().getApproach();
         double curspeed = v.getCurspeed();
 
@@ -126,11 +126,11 @@ public class SimulationPanel extends JPanel {
 
         if (pos.getX() > windowsWidth + 100 || pos.getX() < -200 || 
             pos.getY() > windowHeight + 100 || pos.getY() < -200) {
-            resetVehicle((Car)v, pos);
+            resetVehicle(v, pos);
         }
     }
 
-    private void resetVehicle(Car v, Coordinate pos) {
+    private void resetVehicle(Vehicle v, Coordinate pos) {
         Coordinate spawn = vehicleSpawns.get(v);
         pos.setX(spawn.getX());
         pos.setY(spawn.getY());
@@ -141,7 +141,7 @@ public class SimulationPanel extends JPanel {
         v.setTurnDirection(TurnDirection.values()[new java.util.Random().nextInt(3)]);
     }
 
-    private boolean isBehind(Vehicles v, Coordinate vPos, Vehicles other, Coordinate otherPos) {
+    private boolean isBehind(Vehicle v, Coordinate vPos, Vehicle other, Coordinate otherPos) {
         Approach approach = v.getRoad().getApproach();
         if (approach == Approach.SOUTH) return otherPos.getX() > vPos.getX();
         else if (approach == Approach.NORTH) return otherPos.getX() < vPos.getX();
@@ -150,21 +150,21 @@ public class SimulationPanel extends JPanel {
         return false;
     }
 
-    private TrafficLight getTrafficlightToObey(Vehicles v) {
+    private TrafficLight getTrafficlightToObey(Vehicle v) {
         for (TrafficLight light : trafficLights.keySet()) {
             if (light.getRoad().getApproach() == v.getRoad().getApproach()) return light;
         }
         return null;
     }
 
-    private Stopline getStoplineToObey(Vehicles v) {
+    private Stopline getStoplineToObey(Vehicle v) {
         for (Stopline line : stoplines.keySet()) {
             if (line.getRoad().getApproach() == v.getRoad().getApproach() && line.isCollidable()) return line;
         }
         return null;
     }
 
-    private void performTurn(Vehicles v) {
+    private void performTurn(Vehicle v) {
         Approach currentApp = v.getRoad().getApproach();
         TurnDirection dir = v.getTurnDirection();
         
@@ -209,14 +209,14 @@ public class SimulationPanel extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         for (Map.Entry<Road, Coordinate> entry : roads.entrySet()) entry.getKey().render(g2d, true, entry.getValue());
         for (Map.Entry<TrafficLight, Coordinate> entry : trafficLights.entrySet()) entry.getKey().render(g2d, true, entry.getValue());
-        for (Map.Entry<Vehicles, Coordinate> entry : vehicles.entrySet()) entry.getKey().render(g2d, entry.getKey().getOrientation() == Orientation.VERTICAL, entry.getValue());
+        for (Map.Entry<Vehicle, Coordinate> entry : vehicles.entrySet()) entry.getKey().render(g2d, entry.getKey().getOrientation() == Orientation.VERTICAL, entry.getValue());
     }
 
     void addRoad(Road road, Coordinate pos) { roads.put(road, pos); }
     void addTrafficLight(TrafficLight light, Coordinate pos) { trafficLights.put(light, pos); }
-    void addVehicle(Car car, Coordinate pos) { 
-        vehicles.put(car, new Coordinate(pos.getX(), pos.getY())); 
-        vehicleSpawns.put(car, new Coordinate(pos.getX(), pos.getY()));
+    void addVehicle(Vehicle v, Coordinate pos) { 
+        vehicles.put(v, new Coordinate(pos.getX(), pos.getY())); 
+        vehicleSpawns.put(v, new Coordinate(pos.getX(), pos.getY()));
     }
     void addstopline(Stopline line, Coordinate pos) { stoplines.put(line, pos); }
 }
