@@ -21,6 +21,11 @@ public class Motorcycle extends Vehicle {
     }
 
     @Override
+    public double getAccelerationRate() {
+        return 0.4;
+    }
+
+    @Override
     public void render(Graphics2D g2d, boolean vertical, Coordinate pos) {
         if (sprite == null) return;
         

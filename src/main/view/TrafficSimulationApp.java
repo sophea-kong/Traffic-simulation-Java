@@ -16,11 +16,11 @@ public class TrafficSimulationApp extends JFrame {
         SimulationPanel panel = new SimulationPanel(1000, 800);
 
         // Road 1: South (Right)
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 6.0, 6.0, road1, Car_load.ONE_PERSON), new Coordinate(50, 450));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.0, 4.0, road1, Car_load.FOUR_PERSON), new Coordinate(-50, 450));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 5.5, 5.5, road1, Car_load.TWO_PERSON), new Coordinate(-150, 450));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 7.0, 7.0, road1, Car_load.ONE_PERSON), new Coordinate(-300, 450));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.5, 4.5, road1, Car_load.THREE_PERSON), new Coordinate(-450, 450));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 6.0, 6.0, road1, Car_load.ONE_PERSON), new Coordinate(50, 450));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.0, 4.0, road1, Car_load.FOUR_PERSON), new Coordinate(-50, 450));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 5.5, 5.5, road1, Car_load.TWO_PERSON), new Coordinate(-150, 450));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 7.0, 7.0, road1, Car_load.ONE_PERSON), new Coordinate(-300, 450));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.5, 4.5, road1, Car_load.THREE_PERSON), new Coordinate(-450, 450));
         
         // Road 2: North (Left)
         panel.addVehicle(new Car(Orientation.HORIZONTAL, 5.5, 5.5, road2, Car_load.THREE_PERSON), new Coordinate(950, 350));

@@ -27,6 +27,11 @@ public class Car extends Vehicle {
     }
 
     @Override
+    public double getAccelerationRate() {
+        return 0.2;
+    }
+
+    @Override
     public void loadSprite() {
         try {
             sprite = ImageIO.read(getClass().getResource("/images/car/redCar.png"));

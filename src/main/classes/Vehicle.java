@@ -71,6 +71,8 @@ public abstract class Vehicle extends AnimatedObject implements Renderable, Upda
 
     public abstract void loadSprite(); 
 
+    public abstract double getAccelerationRate();
+
     public Coordinate getSpawnPosition() { return spawnPosition; }
     public Road getOriginalRoad() { return originalRoad; }
     public TurnDirection getTurnDirection() { return turnDirection; }

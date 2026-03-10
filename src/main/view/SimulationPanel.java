@@ -28,7 +28,7 @@ public class SimulationPanel extends JPanel {
         for (Vehicle v : vehicles.keySet()) {
             Coordinate pos = vehicles.get(v);
             
-            double speedIncrease = (v instanceof Motorcycle) ? 0.4 : 0.2;
+            double speedIncrease = v.getAccelerationRate();
             if (v.getCurspeed() >= v.getSpeed()) speedIncrease = 0.0;
             v.setCurspeed(v.getCurspeed() + speedIncrease);
 
@@ -207,9 +207,19 @@ public class SimulationPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        for (Map.Entry<Road, Coordinate> entry : roads.entrySet()) entry.getKey().render(g2d, true, entry.getValue());
-        for (Map.Entry<TrafficLight, Coordinate> entry : trafficLights.entrySet()) entry.getKey().render(g2d, true, entry.getValue());
-        for (Map.Entry<Vehicle, Coordinate> entry : vehicles.entrySet()) entry.getKey().render(g2d, entry.getKey().getOrientation() == Orientation.VERTICAL, entry.getValue());
+
+        // loop through roads, traffic lights, and vehicles to render them (polymorphism becuase we call render on the abstract class type but it uses the overridden method in the actual class)
+        for (Map.Entry<Road, Coordinate> entry : roads.entrySet()) {
+            entry.getKey().render(g2d, true, entry.getValue());
+        };
+        
+        for (Map.Entry<TrafficLight, Coordinate> entry : trafficLights.entrySet()) {
+            entry.getKey().render(g2d, true, entry.getValue());
+        };
+
+        for (Map.Entry<Vehicle, Coordinate> entry : vehicles.entrySet()) {
+            entry.getKey().render(g2d, entry.getKey().getOrientation() == Orientation.VERTICAL, entry.getValue());
+        };    ;
     }
 
     void addRoad(Road road, Coordinate pos) { roads.put(road, pos); }

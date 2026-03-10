@@ -1,4 +1,4 @@
-public class InanimatedObject extends SimObject {
+public abstract class InanimatedObject extends SimObject {
     protected boolean isInteractable;
     protected boolean isCollidable;
 
