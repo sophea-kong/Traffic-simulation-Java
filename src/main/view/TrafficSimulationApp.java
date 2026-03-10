@@ -45,6 +45,9 @@ public class TrafficSimulationApp extends JFrame {
         //Orientation orientation, Approach approach, int x, int y, double speed, double curspeed, Road road) {
         panel.addVehicle(new Ambulance(Orientation.HORIZONTAL, Approach.SOUTH, -600, 450, 8.0, 8.0, road1), new Coordinate(-600, 450));
 
+        // Add motorcycle to road 2
+        panel.addVehicle(new Motorcycle(Orientation.HORIZONTAL, Approach.NORTH, 1650, 350, 7.0, 7.0, road2), new Coordinate(1650, 350));
+
         // Synchronized Timings
         TrafficLight light1 = new TrafficLight(road1, LightState.GREEN, 7000, 2000, 9000);
         TrafficLight light2 = new TrafficLight(road2, LightState.GREEN, 7000, 2000, 9000);

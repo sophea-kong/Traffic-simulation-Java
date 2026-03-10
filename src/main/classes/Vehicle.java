@@ -10,6 +10,8 @@ enum TurnDirection {
 
 public abstract class Vehicle extends AnimatedObject implements Renderable, Updatable {
     protected BufferedImage sprite;
+
+
     private Coordinate spawnPosition;
     private Road road;
     private Road originalRoad;
@@ -88,6 +90,7 @@ public abstract class Vehicle extends AnimatedObject implements Renderable, Upda
     }
     public int getwidth() { return super.getWidth(); }
     public int getheight() { return super.getHeight(); }
+    public boolean isEmergency() { return false; }
 
     @Override
     public void update(int deltaMs) {

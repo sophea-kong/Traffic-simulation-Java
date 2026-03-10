@@ -28,7 +28,7 @@ public class SimulationPanel extends JPanel {
         for (Vehicle v : vehicles.keySet()) {
             Coordinate pos = vehicles.get(v);
             
-            double speedIncrease = 0.2;
+            double speedIncrease = (v instanceof Motorcycle) ? 0.4 : 0.2;
             if (v.getCurspeed() >= v.getSpeed()) speedIncrease = 0.0;
             v.setCurspeed(v.getCurspeed() + speedIncrease);
 
@@ -36,7 +36,7 @@ public class SimulationPanel extends JPanel {
             TrafficLight matchedLight = getTrafficlightToObey(v);
             Stopline matchedLine = getStoplineToObey(v);
 
-            if (!v.hasTurned() && matchedLight != null && matchedLine != null && matchedLight.getState() == LightState.RED) {
+            if (!v.isEmergency() && !v.hasTurned() && matchedLight != null && matchedLine != null && matchedLight.getState() == LightState.RED) {
                 Coordinate linePos = stoplines.get(matchedLine);
                 double distance = Math.hypot(linePos.getX() - pos.getX(), linePos.getY() - pos.getY());
                 if (distance <= stopDistance) stop = true;
