@@ -14,6 +14,8 @@ public class SimulationPanel extends JPanel {
         setBackground(new Color(150, 150, 150)); // Gray background
         setPreferredSize(new Dimension(windowWidth, windowHeight));
 
+
+
         // //create road object
         // Road road1 = new Road(100, 400, Orientation.HORIZONTAL, Approach.SOUTH, 600, 200, 2, 200, 1);
         // Road road2 = new Road(900, 400, Orientation.HORIZONTAL, Approach.NORTH, 600, 200, 2, -200,2);
@@ -65,6 +67,20 @@ public class SimulationPanel extends JPanel {
             updateSimulation();
             repaint();
         });
+
+        JButton button =  new JButton("Pause");
+
+        button.addActionListener(e -> {
+            // Toggle the timer's running state
+            if (timer.isRunning()) {
+                timer.stop();
+                button.setText("Resume");
+            } else {
+                timer.start();
+                button.setText("Pause");
+            }
+        });
+        add(button);
         timer.start();
     }
 
