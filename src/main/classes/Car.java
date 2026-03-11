@@ -26,6 +26,10 @@ public class Car extends Vehicle {
         loadSprite();
     }
 
+
+    @Override
+    public boolean isEmergency() { return false; }
+
     @Override
     public double getAccelerationRate() {
         return 0.2;

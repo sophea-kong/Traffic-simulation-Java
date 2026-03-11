@@ -11,6 +11,9 @@ public class Motorcycle extends Vehicle {
     }
 
     @Override
+    public boolean isEmergency() { return false; }
+
+    @Override
     public void loadSprite() {
         try {
             sprite = ImageIO.read(getClass().getResource("/images/motorcycle/redMotorcycle.png"));

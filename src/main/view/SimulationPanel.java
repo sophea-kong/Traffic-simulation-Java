@@ -54,7 +54,7 @@ public class SimulationPanel extends JPanel {
                                     v.setOnPriorityRoad(true);
                                     System.out.println("Emergency vehicle on " + v.getRoad().getApproach() + " is moving to priority road." + v.isOnPriorityRoad());
                                 } else if ((v.getRoad().getApproach() == Approach.EAST || v.getRoad().getApproach() == Approach.WEST) && !v.isOnPriorityRoad()){
-                                    pos.setX(pos.getX() - 6);
+                                    pos.setX(pos.getX() - 40);
                                     v.setOnPriorityRoad(true);
                                 }
                             } else {
@@ -232,6 +232,14 @@ public class SimulationPanel extends JPanel {
         for (Map.Entry<Vehicle, Coordinate> entry : vehicles.entrySet()) {
             entry.getKey().render(g2d, entry.getKey().getOrientation() == Orientation.VERTICAL, entry.getValue());
         };    ;
+    }
+
+    void countVehicles() {
+        int count = 0;
+        for (Vehicle v : vehicles.keySet()) {
+            count++;
+        }
+        System.out.println("Total vehicles: " + count);
     }
 
     void addRoad(Road road, Coordinate pos) { roads.put(road, pos); }

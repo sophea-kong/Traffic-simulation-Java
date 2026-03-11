@@ -8,7 +8,7 @@ enum TurnDirection {
     STRAIGHT, LEFT, RIGHT
 }
 
-public abstract class Vehicle extends AnimatedObject implements Renderable, Updatable {
+public abstract class Vehicle extends AnimatedObject{
     protected BufferedImage sprite;
 
 
@@ -20,6 +20,7 @@ public abstract class Vehicle extends AnimatedObject implements Renderable, Upda
     private boolean isTurning = false;
     private boolean isOnPriorityRoad = false;
     private double turnTargetCoord = 0;
+
     protected double currentAngle = 0;
     protected double targetAngle = 0;
     protected Coordinate position;
@@ -95,7 +96,7 @@ public abstract class Vehicle extends AnimatedObject implements Renderable, Upda
     }
     public int getwidth() { return super.getWidth(); }
     public int getheight() { return super.getHeight(); }
-    public boolean isEmergency() { return false; }
+    public abstract boolean isEmergency();
 
     @Override
     public void update(int deltaMs) {

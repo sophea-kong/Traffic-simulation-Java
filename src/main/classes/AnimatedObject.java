@@ -1,4 +1,5 @@
-public abstract class AnimatedObject extends SimObject{
+
+public abstract class AnimatedObject extends SimObject implements Renderable, Updatable {
     private double speed;
     private double curspeed;
     protected Orientation orientation;
