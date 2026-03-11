@@ -18,6 +18,7 @@ public abstract class Vehicle extends AnimatedObject implements Renderable, Upda
     private TurnDirection turnDirection;
     private boolean hasTurned = false;
     private boolean isTurning = false;
+    private boolean isOnPriorityRoad = false;
     private double turnTargetCoord = 0;
     protected double currentAngle = 0;
     protected double targetAngle = 0;
@@ -83,6 +84,8 @@ public abstract class Vehicle extends AnimatedObject implements Renderable, Upda
     public void setTurning(boolean turning) { isTurning = turning; }
     public double getTurnTargetCoord() { return turnTargetCoord; }
     public void setTurnTargetCoord(double turnTargetCoord) { this.turnTargetCoord = turnTargetCoord; }
+    public boolean isOnPriorityRoad() { return isOnPriorityRoad; }
+    public void setOnPriorityRoad(boolean onPriorityRoad) { isOnPriorityRoad = onPriorityRoad; }
     public Road getRoad() { return road; }
     public void setRoad(Road road) { 
         this.road = road; 
@@ -147,7 +150,7 @@ public abstract class Vehicle extends AnimatedObject implements Renderable, Upda
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Vehicle vehicle = (Vehicle) o;
-        return hasTurned == vehicle.hasTurned && isTurning == vehicle.isTurning && Double.compare(vehicle.turnTargetCoord, turnTargetCoord) == 0 && Double.compare(vehicle.currentAngle, currentAngle) == 0 && Double.compare(vehicle.targetAngle, targetAngle) == 0 && java.util.Objects.equals(spawnPosition, vehicle.spawnPosition) && java.util.Objects.equals(road, vehicle.road) && java.util.Objects.equals(originalRoad, vehicle.originalRoad) && turnDirection == vehicle.turnDirection && java.util.Objects.equals(position, vehicle.position) && approach == vehicle.approach;
+        return hasTurned == vehicle.hasTurned && isTurning == vehicle.isTurning && isOnPriorityRoad == vehicle.isOnPriorityRoad && Double.compare(vehicle.turnTargetCoord, turnTargetCoord) == 0 && Double.compare(vehicle.currentAngle, currentAngle) == 0 && Double.compare(vehicle.targetAngle, targetAngle) == 0 && java.util.Objects.equals(spawnPosition, vehicle.spawnPosition) && java.util.Objects.equals(road, vehicle.road) && java.util.Objects.equals(originalRoad, vehicle.originalRoad) && turnDirection == vehicle.turnDirection && java.util.Objects.equals(position, vehicle.position) && approach == vehicle.approach;
     }
 
     @Override
@@ -161,6 +164,7 @@ public abstract class Vehicle extends AnimatedObject implements Renderable, Upda
                 ", turnDirection=" + turnDirection +
                 ", hasTurned=" + hasTurned +
                 ", isTurning=" + isTurning +
+                ", isOnPriorityRoad=" + isOnPriorityRoad +
                 ", approach=" + approach +
                 '}';
     }

@@ -48,7 +48,18 @@ public class SimulationPanel extends JPanel {
                     Coordinate otherPos = vehicles.get(other);
                     if (v.getRoad().getApproach() == other.getRoad().getApproach()) {
                         if (isBehind(v, pos, other, otherPos) && Math.hypot(otherPos.getX() - pos.getX(), otherPos.getY() - pos.getY()) < 80) {
-                            stop = true;
+                            if(v.isEmergency()) {
+                                if((v.getRoad().getApproach() == Approach.SOUTH || v.getRoad().getApproach() == Approach.NORTH) && !v.isOnPriorityRoad()) {
+                                    pos.setY(pos.getY() - 40);
+                                    v.setOnPriorityRoad(true);
+                                    System.out.println("Emergency vehicle on " + v.getRoad().getApproach() + " is moving to priority road." + v.isOnPriorityRoad());
+                                } else if ((v.getRoad().getApproach() == Approach.EAST || v.getRoad().getApproach() == Approach.WEST) && !v.isOnPriorityRoad()){
+                                    pos.setX(pos.getX() - 6);
+                                    v.setOnPriorityRoad(true);
+                                }
+                            } else {
+                                stop = true;
+                            }
                             break;
                         }
                     }
@@ -138,6 +149,7 @@ public class SimulationPanel extends JPanel {
         v.setOrientation((v.getRoad().getId() == 1 || v.getRoad().getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL);
         v.setHasTurned(false);
         v.setTurning(false);
+        v.setOnPriorityRoad(false);
         v.setTurnDirection(TurnDirection.values()[new java.util.Random().nextInt(3)]);
     }
 
@@ -212,7 +224,7 @@ public class SimulationPanel extends JPanel {
         for (Map.Entry<Road, Coordinate> entry : roads.entrySet()) {
             entry.getKey().render(g2d, true, entry.getValue());
         };
-        
+
         for (Map.Entry<TrafficLight, Coordinate> entry : trafficLights.entrySet()) {
             entry.getKey().render(g2d, true, entry.getValue());
         };
