@@ -18,6 +18,20 @@ public class SimulationPanel extends JPanel {
             updateSimulation();
             repaint();
         });
+
+        JButton button =  new JButton("Pause");
+
+        button.addActionListener(e -> {
+            // Toggle the timer's running state
+            if (timer.isRunning()) {
+                timer.stop();
+                button.setText("Resume");
+            } else {
+                timer.start();
+                button.setText("Pause");
+            }
+        });
+        add(button);
         timer.start();
     }
 

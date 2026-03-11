@@ -13,7 +13,7 @@ enum Approach {
 public class Road extends InanimatedObject implements Renderable {
     public static int idCounter = 1;
     private Orientation orientation;
-    private Approach approach;
+    Approach approach;
 
     private int length;
     private int roadWidth;
