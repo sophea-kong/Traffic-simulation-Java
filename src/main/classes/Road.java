@@ -10,15 +10,12 @@ enum Approach {
     NORTH, SOUTH, EAST, WEST
 }
 
-class Road {
+public class Road extends InanimatedObject implements Renderable {
     public static int idCounter = 1;
-    private int id;
-    private Coordinate position;
-
     private Orientation orientation;
-    private Approach approach;
+    Approach approach;
 
-    private int lenght;
+    private int length;
     private int roadWidth;
     private int laneCount;
     private int stopLineOffset;
@@ -26,69 +23,25 @@ class Road {
     private Color asphaltColor = new Color(60, 60, 60);
     private Color laneMark = new Color(255, 255, 255);
     private Color stopLineColor = new Color(255, 235, 235);
-    // private Color crosColor = new Color(255, 235, 235);
 
-    Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
+    Road(Orientation orientation, Approach approach, int length, int roadWidth,
             int laneCount, int stopLineOffset) {
-        this.id = Road.idCounter++;
-        setPosition(new Coordinate(cx, cy));
+        super((orientation == Orientation.HORIZONTAL) ? roadWidth : length,
+              (orientation == Orientation.HORIZONTAL) ? length : roadWidth, true, true);
         this.orientation = orientation;
         this.approach = approach;
-        setLenght(lenght);
+        setLength(length);
         setRoadWidth(roadWidth);
         setLaneCount(laneCount);
         setStopLineOffset(stopLineOffset);
     }
-
-
-    Road(int cx, int cy, Orientation orientation, Approach approach, int lenght, int roadWidth,
-            int laneCount, int stopLineOffset, int id) {
-        setPosition(new Coordinate(cx, cy));
-        this.orientation = orientation;
-        this.approach = approach;
-        setLenght(lenght);
-        setRoadWidth(roadWidth);
-        setLaneCount(laneCount);
-        setStopLineOffset(stopLineOffset);
-        this.id = Road.idCounter++;
-    }
-    Road (int x, int y, Orientation orientation, Approach approach, int stopLineOffset, int id) {
-        setPosition(new Coordinate(x, y));
-        this.orientation = orientation;
-        this.approach = approach;
-        this.lenght = 600;
-        this.roadWidth = 200;
-        this.laneCount = 2;
-        this.stopLineOffset = stopLineOffset;
-        this.id = Road.idCounter++;
-    }
-   Road (int x, int y, Approach approach, int id) {  
-        setPosition(new Coordinate(x, y));
-        this.orientation = (approach == Approach.NORTH || approach == Approach.SOUTH) ? Orientation.HORIZONTAL : Orientation.VERTICAL;
-        this.approach = approach;
-        this.lenght = 600;  
-        this.roadWidth = 200;
-        this.laneCount = 2;
-        this.stopLineOffset = (approach == Approach.NORTH || approach == Approach.EAST) ? 200 : -200;
-        this.id = Road.idCounter++; 
-   } 
-   Road (int x, int y, int id) {
-        setPosition(new Coordinate(x, y));
-        this.orientation = (id == 1 || id == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL; 
-        this.approach = (id == 1) ? Approach.SOUTH : (id == 2) ? Approach.NORTH : (id == 3) ? Approach.EAST : Approach.WEST;
-        this.lenght = 600;  
-        this.roadWidth = 200;
-        this.laneCount = 2;
-        this.stopLineOffset = (this.approach == Approach.SOUTH || this.approach == Approach.WEST) ? 200 : -200;
-        this.id = Road.idCounter++; 
-   }
-
+    
 
     private void setStopLineOffset(int stopLineOffset) {
-        if (stopLineOffset < 0) {
-            stopLineOffset = 0;
-        } else if (stopLineOffset > this.lenght / 2) {
-            stopLineOffset = this.lenght / 2;
+        if (stopLineOffset < -this.length / 2) {
+            stopLineOffset = -this.length / 2;
+        } else if (stopLineOffset > this.length / 2) {
+            stopLineOffset = this.length / 2;
         }
         this.stopLineOffset = stopLineOffset;
     }
@@ -113,72 +66,84 @@ class Road {
 
 
 
-    private void setPosition(Coordinate position) {
-        if (position == null) {
-            return;
+    private void setLength(int length) {
+        if (length < 0) {
+            length = 0;
+        } else if (length > 2000) {
+            length = 2000;
         }
-        this.position = position;
-    }
-    
-    private void setLenght(int lenght) {
-        if (lenght < 0) {
-            lenght = 0;
-        } else if (lenght > 2000) {
-            lenght = 2000;
-        }
-        this.lenght = lenght;
+        this.length = length;
     }
 
     public Approach getApproach() {
         return this.approach;
     }
 
-    public int getId() {
-        return this.id;
-    }
-
-    public static void drawRoad(Graphics2D g2d, Road road) {
+    @Override
+    public void render(Graphics2D g2d, boolean vertical, Coordinate pos) {
         // Draw road background
-        g2d.setColor(road.asphaltColor);
+        g2d.setColor(this.asphaltColor);
 
-        if (road.orientation == Orientation.HORIZONTAL) {
-            g2d.fillRect((int) road.position.getX() - road.lenght / 2, (int) road.position.getY() - road.roadWidth / 2,
-                    road.lenght, road.roadWidth);
+        if (this.orientation == Orientation.HORIZONTAL) {
+            g2d.fillRect((int) pos.getX() - this.length / 2, (int) pos.getY() - this.roadWidth / 2,
+                    this.length, this.roadWidth);
 
             // Draw lane markings
-            g2d.setColor(road.laneMark);
-            for (int i = road.roadWidth / road.laneCount; i < road.roadWidth; i += road.roadWidth / road.laneCount) {
-                g2d.drawLine((int) road.position.getX() - road.lenght / 2,
-                        (int) (road.position.getY() - road.roadWidth / 2 + i),
-                        (int) road.position.getX() + road.lenght / 2,
-                        (int) (road.position.getY() - road.roadWidth / 2 + i));
+            g2d.setColor(this.laneMark);
+            for (int i = this.roadWidth / this.laneCount; i < this.roadWidth; i += this.roadWidth / this.laneCount) {
+                g2d.drawLine((int) pos.getX() - this.length / 2,
+                        (int) (pos.getY() - this.roadWidth / 2 + i),
+                        (int) pos.getX() + this.length / 2,
+                        (int) (pos.getY() - this.roadWidth / 2 + i));
             }
         } else {
-            g2d.fillRect((int) road.position.getX() - road.roadWidth / 2, (int) road.position.getY() - road.lenght / 2,
-                    road.roadWidth, road.lenght);
+            g2d.fillRect((int) pos.getX() - this.roadWidth / 2, (int) pos.getY() - this.length / 2,
+                    this.roadWidth, this.length);
 
             // Draw lane markings
-            g2d.setColor(road.laneMark);
-            for (int i = road.roadWidth / road.laneCount; i < road.roadWidth; i += road.roadWidth / road.laneCount) {
-                g2d.drawLine((int) (road.position.getX() - road.roadWidth / 2 + i),
-                        (int) road.position.getY() - road.lenght / 2,
-                        (int) (road.position.getX() - road.roadWidth / 2 + i),
-                        (int) road.position.getY() + road.lenght / 2);
+            g2d.setColor(this.laneMark);
+            for (int i = this.roadWidth / this.laneCount; i < this.roadWidth; i += this.roadWidth / this.laneCount) {
+                g2d.drawLine((int) (pos.getX() - this.roadWidth / 2 + i),
+                        (int) pos.getY() - this.length / 2,
+                        (int) (pos.getX() - this.roadWidth / 2 + i),
+                        (int) pos.getY() + this.length / 2);
             }
         }
 
         // Draw stop line
-        g2d.setColor(road.stopLineColor);
-        if (road.orientation == Orientation.HORIZONTAL) {
+        g2d.setColor(this.stopLineColor);
+        if (this.orientation == Orientation.HORIZONTAL) {
             g2d.setStroke(new BasicStroke(3));
-            g2d.drawLine((int) road.position.getX() + road.stopLineOffset,
-                    (int) road.position.getY() - road.roadWidth / 2,
-                    (int) road.position.getX() + road.stopLineOffset, (int) road.position.getY() + road.roadWidth / 2);
+            g2d.drawLine((int) pos.getX() + this.stopLineOffset,
+                    (int) pos.getY() - this.roadWidth / 2,
+                    (int) pos.getX() + this.stopLineOffset, (int) pos.getY() + this.roadWidth / 2);
         } else {
             g2d.setStroke(new BasicStroke(3));
-            g2d.drawLine((int) road.position.getX() - road.roadWidth / 2,
-                    (int) road.position.getY() + road.stopLineOffset,
-                    (int) road.position.getX() + road.roadWidth / 2, (int) road.position.getY() + road.stopLineOffset);
+            g2d.drawLine((int) pos.getX() - this.roadWidth / 2,
+                    (int) pos.getY() + this.stopLineOffset,
+                    (int) pos.getX() + this.roadWidth / 2, (int) pos.getY() + this.stopLineOffset);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Road road = (Road) o;
+        return length == road.length && roadWidth == road.roadWidth && laneCount == road.laneCount && stopLineOffset == road.stopLineOffset && orientation == road.orientation && approach == road.approach;
+    }
+
+    @Override
+    public String toString() {
+        return "Road{" +
+                "id=" + id +
+                ", orientation=" + orientation +
+                ", approach=" + approach +
+                ", length=" + length +
+                ", roadWidth=" + roadWidth +
+                '}';
+    }
 }
+
+

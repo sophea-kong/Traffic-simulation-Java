@@ -1,3 +1,7 @@
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.awt.Graphics2D;
+
 enum Car_load {
     ONE_PERSON,
     TWO_PERSON,
@@ -5,108 +9,69 @@ enum Car_load {
     FOUR_PERSON
 }
 
-public class Car extends Vehicles {
+public class Car extends Vehicle {
     private Car_load load;
+    private double previousSpeed = 6.0;
 
-    Car(Orientation orientation, int x, int y, double speed, double curspeed, Road road, Car_load load) {
-        super(orientation, x, y, 50, 30, speed, curspeed, road);
+    Car(Orientation orientation, double speed, double curspeed, Road road, Car_load load) {
+        super(orientation, 30, 50, speed, curspeed, road);
         this.load = load;
-        //this.roadId = road.id;
-    }
-    Car(Orientation orientation, int x, int y, int roadId ) {
-        super(orientation, x, y, 50, 30, 6.0, 0, null);
-        //this.roadId = roadId;
-        this.load = Car_load.ONE_PERSON;
-    }
-    Car(Road road) {
-        super((road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL,
-              (road.getId() == 1) ? 500 : (road.getId() == 2) ? 600 : 500,
-              (road.getId() == 1) ? 450 : (road.getId() == 2) ? 400 : (road.getId() == 3) ? 750 : 50,
-              50, 30, 6.0, 0, road);
-        //this.roadId = road.id;
-        this.load = Car_load.ONE_PERSON;
-    }
-
-    @Override
-    double accelerate() {
-        double speedIncrease = 0.0;
-        switch (load) {
-            case ONE_PERSON:
-                speedIncrease = 0.2;
-                break;
-            case TWO_PERSON:
-                speedIncrease = 1.7;
-                break;
-            case THREE_PERSON:
-                speedIncrease = 1.5;
-                break;
-            case FOUR_PERSON:
-                speedIncrease = 0.1;
-                break;
-        }
-        if (this.getCurspeed() >= this.getSpeed()) {
-            speedIncrease = 0.0;
-        }
-        return speedIncrease;
-    }
-
-    @Override
-    public void move(int windowsWidth, int windowHeight, Orientation orientation, Approach approach) {
-        this.setCurspeed(this.getCurspeed() + accelerate());
-        if (this.getCurspeed() > this.getSpeed()) {
-            this.setCurspeed(this.getSpeed());
-        }
-        for(int i = 0; i < (int)this.getCurspeed(); i++) {
-            if (approach == Approach.SOUTH) {
-            //use setX method to move left to right and wrap around
-            setX(this.getPosition().getX() + this.getCurspeed());
-            if (this.getPosition().getX() > windowsWidth) {
-                setX(-this.getwidth()); // Wrap around to the left
-            }
-        } else if (approach == Approach.EAST){
-            setY(this.getPosition().getY() - this.getCurspeed());
-            if (this.getPosition().getY() > windowHeight) {
-                setY(-this.getheight()); // Wrap around to the top
-            }
-        } else if (approach == Approach.WEST){
-            setY(this.getPosition().getY() + this.getCurspeed());
-            if (this.getPosition().getY() < 0) {
-                setY(windowHeight); // Wrap around to the bottom
-            }
-        } else {
-            setX(this.getPosition().getX() - this.getCurspeed());
-            if (this.getPosition().getX() < 0) {
-                setX(windowsWidth); // Wrap around to the right
-            }
-        }
-        }
-    }
-
-    public void setSpeedToZero() {
-        this.setCurspeed(0);
-    }
-
-    // save the previous speed before stopping ( becuase stopping in main file mean that the speed is 0 so without saving previous speed we cant resume to previous speed)
-    private double previousSpeed = this.getSpeed();
-
-    public void setPreviousSpeed(double speed) {
         this.previousSpeed = speed;
+        loadSprite();
     }
 
-    public double getPreviousSpeed() {
-        return this.previousSpeed;
+    Car(Road road) {
+        super(road);
+        this.load = Car_load.ONE_PERSON;
+        loadSprite();
     }
+
+
+    @Override
+    public boolean isEmergency() { return false; }
+
+    @Override
+    public double getAccelerationRate() {
+        return 0.2;
+    }
+
+    @Override
+    public void loadSprite() {
+        try {
+            sprite = ImageIO.read(getClass().getResource("/images/car/redCar.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public void setPreviousSpeed(double speed) { this.previousSpeed = speed; }
+    public double getPreviousSpeed() { return this.previousSpeed; }
+    public Car_load getLoad() { return load; }
+    public void setLoad(Car_load load) { this.load = load; }
 
     public static Car create_car(Road road){
-        if (road.getApproach() == Approach.NORTH) {
-            return new Car(Orientation.VERTICAL, 1000, 350, 5.0, 5.0, road, Car_load.ONE_PERSON);
-        } else if (road.getApproach() == Approach.SOUTH) {
-            return new Car(Orientation.HORIZONTAL, 0, 450, 5.0, 5.0, road, Car_load.FOUR_PERSON);
-        } else if (road.getApproach() == Approach.EAST) {
-            return new Car(Orientation.VERTICAL, 550, 800, 5.0, 5.0, road, Car_load.TWO_PERSON);
-        } else {
-            return new Car(Orientation.HORIZONTAL, 450, 0, 5.0, 5.0, road, Car_load.THREE_PERSON);
-        }
+        return new Car(road);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Car car = (Car) o;
+        return Double.compare(car.previousSpeed, previousSpeed) == 0 && load == car.load;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", load=" + load +
+                ", previousSpeed=" + previousSpeed +
+                ", orientation=" + orientation +
+                ", approach=" + approach +
+                '}';
+    }
 }

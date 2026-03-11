@@ -4,6 +4,6 @@ feild :
     int cy, cx : coordinate of the center of the Road.
     Orietation : axis of the road; Hozi/verti
     approach : direction of the road WNSE
-    length : the road lenght (height). depend on the Orietation
+    length : the road length (height). depend on the Orietation
     roadWidth : the width of the road.
     stoplineOffset : the offset of the stop line from the middle of the road.
