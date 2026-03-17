@@ -1,3 +1,8 @@
+package view;
+
+import parents.*;
+import children.*;
+import utils.*;
 import javax.swing.*;
 
 public class TrafficSimulationApp extends JFrame {

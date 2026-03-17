@@ -1,3 +1,9 @@
+package parents;
+
+import interfaces.Renderable;
+import interfaces.Updatable;
+import utils.Orientation;
+
 
 public abstract class AnimatedObject extends SimObject implements Renderable, Updatable {
     private double speed;

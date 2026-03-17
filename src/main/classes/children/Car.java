@@ -1,26 +1,24 @@
+package children;
+
+import parents.Vehicle;
+import utils.*;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.awt.Graphics2D;
 
-enum Car_load {
-    ONE_PERSON,
-    TWO_PERSON,
-    THREE_PERSON,
-    FOUR_PERSON
-}
 
 public class Car extends Vehicle {
     private Car_load load;
     private double previousSpeed = 6.0;
 
-    Car(Orientation orientation, double speed, double curspeed, Road road, Car_load load) {
+    public Car(Orientation orientation, double speed, double curspeed, Road road, Car_load load) {
         super(orientation, 30, 50, speed, curspeed, road);
         this.load = load;
         this.previousSpeed = speed;
         loadSprite();
     }
 
-    Car(Road road) {
+    public Car(Road road) {
         super(road);
         this.load = Car_load.ONE_PERSON;
         loadSprite();

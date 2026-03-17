@@ -1,3 +1,9 @@
+package view;
+
+import parents.*;
+import children.*;
+import utils.*;
+import interfaces.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;

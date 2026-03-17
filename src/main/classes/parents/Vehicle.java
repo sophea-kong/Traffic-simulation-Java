@@ -1,12 +1,16 @@
+package parents;
+
+import interfaces.Renderable;
+import utils.*;
+import children.Road;
 import java.awt.*;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.Random;
+
+
 import java.awt.image.BufferedImage;
 
-enum TurnDirection {
-    STRAIGHT, LEFT, RIGHT
-}
 
 public abstract class Vehicle extends AnimatedObject{
     protected BufferedImage sprite;
@@ -27,7 +31,7 @@ public abstract class Vehicle extends AnimatedObject{
     protected Approach approach;
     
 
-    Vehicle(Orientation orientation, Approach approach, int x, int y, int width, int height, double speed, double curspeed, Road road) {
+    public Vehicle(Orientation orientation, Approach approach, int x, int y, int width, int height, double speed, double curspeed, Road road) {
         super(height, width, speed, curspeed);
         this.orientation = orientation;
         this.approach = approach;
@@ -38,7 +42,7 @@ public abstract class Vehicle extends AnimatedObject{
         this.turnDirection = TurnDirection.values()[new Random().nextInt(3)];
     }
 
-    Vehicle(Orientation orientation, int height, int width, double speed, double curspeed, Road road) {
+    public Vehicle(Orientation orientation, int height, int width, double speed, double curspeed, Road road) {
         super(height, width, speed, curspeed);
         this.orientation = orientation;
         this.road = road;
@@ -53,7 +57,7 @@ public abstract class Vehicle extends AnimatedObject{
         this.turnDirection = TurnDirection.values()[new Random().nextInt(3)];
     }
 
-    Vehicle(Road road) {
+    public Vehicle(Road road) {
         super(30, 50, 6.0, 0); 
         this.orientation = (road.getId() == 1 || road.getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL;
         this.approach = switch (road.getId()) {

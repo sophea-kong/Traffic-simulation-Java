@@ -1,14 +1,13 @@
+package children;
+
+import parents.InanimatedObject;
+import interfaces.Renderable;
+import utils.*;
 import java.awt.Color;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 
-enum Orientation {
-    HORIZONTAL, VERTICAL
-}
 
-enum Approach {
-    NORTH, SOUTH, EAST, WEST
-}
 
 public class Road extends InanimatedObject implements Renderable {
     public static int idCounter = 1;
@@ -24,7 +23,7 @@ public class Road extends InanimatedObject implements Renderable {
     private Color laneMark = new Color(255, 255, 255);
     private Color stopLineColor = new Color(255, 235, 235);
 
-    Road(Orientation orientation, Approach approach, int length, int roadWidth,
+    public Road(Orientation orientation, Approach approach, int length, int roadWidth,
             int laneCount, int stopLineOffset) {
         super((orientation == Orientation.HORIZONTAL) ? roadWidth : length,
               (orientation == Orientation.HORIZONTAL) ? length : roadWidth, true, true);

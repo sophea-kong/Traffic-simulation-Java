@@ -1,3 +1,7 @@
+package children;
+
+import parents.Vehicle;
+import utils.*;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.awt.*;

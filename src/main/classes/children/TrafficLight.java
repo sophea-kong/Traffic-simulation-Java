@@ -1,11 +1,11 @@
+package children;
+
+import parents.InanimatedObject;
+import interfaces.*;
+import utils.*;
 import java.awt.Graphics2D;
 import java.awt.Color;
 
-enum LightState {
-    RED,
-    YELLOW,
-    GREEN
-}
 
 public class TrafficLight extends InanimatedObject implements Updatable, Renderable {
     private LightState state;
@@ -13,7 +13,7 @@ public class TrafficLight extends InanimatedObject implements Updatable, Rendera
     private float greenMs, yellowMs, redMs;
     private float elapsedMs = 0;
 
-    TrafficLight(Road road, LightState state, float greenMs, float yellowMs, float redMs) {
+    public TrafficLight(Road road, LightState state, float greenMs, float yellowMs, float redMs) {
         super(100, 40, true, false);
         setRoad(road);
         this.state = state;
@@ -22,7 +22,7 @@ public class TrafficLight extends InanimatedObject implements Updatable, Rendera
         this.redMs = validateMs(redMs);
     }
 
-    TrafficLight(Road road, LightState state) {
+    public TrafficLight(Road road, LightState state) {
         super(100, 40, true, false);
         setRoad(road);
         this.state = state;

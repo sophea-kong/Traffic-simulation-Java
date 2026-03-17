@@ -1,3 +1,6 @@
+package children;
+
+import parents.InanimatedObject;
 public class Stopline extends InanimatedObject {
     public static int count = 1;
     private Road road;
