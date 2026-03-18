@@ -17,18 +17,43 @@ public class SimulationPanel extends JPanel {
     private Map<Vehicle, Coordinate> vehicleSpawns = new LinkedHashMap<>();
     private Map<Stopline, Coordinate> stoplines = new LinkedHashMap<>();
 
+    private int frameCounter = 0;
+
     public SimulationPanel(int windowWidth, int windowHeight) {
         setBackground(new Color(150, 150, 150)); 
         setPreferredSize(new Dimension(windowWidth, windowHeight));
+
+
+        // lamda expression on timer
         Timer timer = new Timer(30, e -> {
             updateSimulation();
             repaint();
+            
+            frameCounter++;
+            if (frameCounter % 100 == 0) {
+                // anonymous Inner Class
+                VehicleFilter emergencyFilter = new VehicleFilter() {
+                    @Override
+                    public boolean filter(Vehicle v) {
+                        // return if the vehicle is emergency and is in the range of panel
+                        return v.isEmergency() && vehicles.get(v).getX() <= 1000
+                                && vehicles.get(v).getY() > 0 && vehicles.get(v).getY() <= 900;
+                    }
+                };
+                int emergencyCount = countFilteredVehicles(emergencyFilter);
+                
+                //Lambda Expression
+                int carCount = countFilteredVehicles(v ->( v instanceof Car) && vehicles.get(v).getX() <= 1000
+                                && vehicles.get(v).getY() > 0 && vehicles.get(v).getY() <= 900);
+                
+                System.out.println("Stats [Frame " + frameCounter + "]: Emergency: " + emergencyCount + ", Cars: " + carCount);
+            }
         });
 
         JButton button =  new JButton("Pause");
-
+        
+        //lambda expression on button
         button.addActionListener(e -> {
-            // Toggle the timer's running state
             if (timer.isRunning()) {
                 timer.stop();
                 button.setText("Resume");
@@ -38,6 +63,8 @@ public class SimulationPanel extends JPanel {
             }
         });
         add(button);
+
+        // timer for simulation loop
         timer.start();
     }
 
@@ -260,6 +287,16 @@ public class SimulationPanel extends JPanel {
             count++;
         }
         System.out.println("Total vehicles: " + count);
+    }
+
+    private int countFilteredVehicles(VehicleFilter filter) {
+        int count = 0;
+        for (Vehicle v : vehicles.keySet()) {
+            if (filter.filter(v)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     void addRoad(Road road, Coordinate pos) { roads.put(road, pos); }
