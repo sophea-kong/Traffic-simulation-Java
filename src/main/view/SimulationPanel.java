@@ -195,8 +195,10 @@ public class SimulationPanel extends JPanel {
                     newVehicle = new Car(laneEntryOrientation, speedValue, 0, s, selectedCarLoad);
                     break;
                 case "Moto":
+                    newVehicle = new Motorcycle(laneEntryOrientation, s.getApproach(), (int) spawnPos.getX(), (int) spawnPos.getY(), speedValue, 0, s);
                     break;
                 case "Ambulance":
+                    newVehicle = new Ambulance(laneEntryOrientation, s.getApproach(), (int) spawnPos.getX(), (int) spawnPos.getY(), speedValue, 0, s);
                     break;
                 default: 
                     return;
