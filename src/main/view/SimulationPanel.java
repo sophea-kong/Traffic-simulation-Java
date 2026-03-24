@@ -2,6 +2,7 @@ package view;
 
 import parents.*;
 import children.*;
+import exceptions.TickSpeedException;
 import utils.*;
 import interfaces.*;
 import javax.swing.*;
@@ -63,6 +64,28 @@ public class SimulationPanel extends JPanel {
             }
         });
         add(button);
+        
+        // creat a input for tickspeed
+        JTextField tickInput = new JTextField("30", 5);
+        tickInput.setLocation(10, 10);
+        tickInput.setVisible(true);
+        tickInput.addActionListener(e -> {
+            try {
+                int newDelay = Integer.parseInt(tickInput.getText());
+                if(newDelay > 200) {throw new TickSpeedException();}
+                timer.setDelay(newDelay);
+            } catch (NumberFormatException Ne) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid integer for tick speed.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            } catch (TickSpeedException Te) {
+                JOptionPane.showMessageDialog(this, Te.getMessage(), "Invalid Tick Speed", JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalArgumentException Ie) {
+                JOptionPane.showMessageDialog(this, Ie.getMessage(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        JLabel tickspeedtext = new JLabel("Tick Speed (ms):");
+        tickspeedtext.setBackground(Color.WHITE);
+        add(tickspeedtext);
+        add(tickInput);
 
         // timer for simulation loop
         timer.start();
