@@ -19,6 +19,13 @@ public class SimulationPanel extends JPanel {
     private Map<Stopline, Coordinate> stoplines = new LinkedHashMap<>();
 
     private int frameCounter = 0;
+    private String selectedVehicle = "Car";
+    private Car_load selectedCarLoad = Car_load.ONE_PERSON;
+    private double speedValue = 1.0;
+    private int laneEntryValue = 1;
+    private Orientation laneEntryOrientation = Orientation.HORIZONTAL;
+    private Road s; // temporary variable to store the road for new vehicle
+    private Coordinate spawnPos = new Coordinate(0, 0);
 
     public SimulationPanel(int windowWidth, int windowHeight) {
         setBackground(new Color(150, 150, 150)); 
@@ -65,6 +72,143 @@ public class SimulationPanel extends JPanel {
         });
         add(button);
         
+        // speed lane entry and exit
+        JTextField speed = new JTextField(10);
+        speed.setText("set speed");
+        speed.addActionListener(e -> {
+            try{
+                speedValue = Double.parseDouble(speed.getText());
+                if (speedValue < 0) {
+                    throw new IllegalArgumentException("Speed value cannot be negative.");
+                }
+            }catch(NumberFormatException Ne) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid number for speed.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }catch(IllegalArgumentException Ie) {
+                JOptionPane.showMessageDialog(this, Ie.getMessage(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        add(speed);
+
+        JTextField laneEntry = new JTextField(10);
+        laneEntry.setText("set lane (1-4)");
+        laneEntry.addActionListener(e -> {
+            try {
+                laneEntryValue = Integer.parseInt(laneEntry.getText());
+                if(laneEntryValue < 1 || laneEntryValue > 4) {
+                    throw new IllegalArgumentException("Lane entry value must be between 1 and 4.");
+                }
+
+                // Horizontal for lane 1 and 2, vertical for lane 3 and 4
+                if(laneEntryValue == 1 || laneEntryValue == 2) {
+                    laneEntryOrientation = Orientation.HORIZONTAL;
+                } else {
+                    laneEntryOrientation = Orientation.VERTICAL;
+                }
+
+                // road
+                if(laneEntryValue == 1) {
+                    s = findRoadByApproach(Approach.SOUTH);
+                    spawnPos = new Coordinate(-50, 450);
+                } else if (laneEntryValue == 2) {
+                    s = findRoadByApproach(Approach.NORTH);
+                    spawnPos = new Coordinate(1550, 350);
+                } else if (laneEntryValue == 3) {
+                    s = findRoadByApproach(Approach.WEST);
+                    spawnPos = new Coordinate(550, 1350);
+                } else if (laneEntryValue == 4) {
+                    s = findRoadByApproach(Approach.EAST);
+                    spawnPos = new Coordinate(450, -550);
+                }
+
+            } catch(NumberFormatException Ne) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid number for lane.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }catch(IllegalArgumentException Ie) {
+                JOptionPane.showMessageDialog(this, Ie.getMessage(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        add(laneEntry);
+        
+        // Drop down menu for select add vehicle type
+        String options[] = {"Car", "Moto", "Ambulance"};
+        String loadOptions[] = {"One Person", "Two People", "Three People", "Four People"};
+        final JComboBox<String> comboBox = new JComboBox<>(options);
+        final JComboBox<String> loadComboBox = new JComboBox<>(loadOptions);
+        comboBox.addActionListener(e -> {
+            if(comboBox.getSelectedItem().equals("Car")) {
+                // if they select car, show another drop down menu for car load
+                loadComboBox.addActionListener(le -> {
+                    String selectedLoad = (String) loadComboBox.getSelectedItem();
+                    switch (selectedLoad) {
+                        case "One Person":
+                            selectedCarLoad = Car_load.ONE_PERSON;
+                            break;
+                        case "Two People":
+                            selectedCarLoad = Car_load.TWO_PERSON;
+                            break;
+                        case "Three People":
+                            selectedCarLoad = Car_load.THREE_PERSON;
+                            break;
+                        case "Four People":
+                            selectedCarLoad = Car_load.FOUR_PERSON;
+                            break;
+                    }
+                    System.out.println("Selected car load: " + selectedCarLoad);
+                });
+                add(loadComboBox);
+                loadComboBox.setVisible(true);
+            } else {
+                loadComboBox.setVisible(false);
+            }
+
+            selectedVehicle  = (String) comboBox.getSelectedItem();
+            System.out.println("Selected vehicle type: " + selectedVehicle);
+        });
+        add(comboBox);
+
+        // button to add vehicle
+        JButton addVehicleButton = new JButton("Add Vehicle");
+        addVehicleButton.addActionListener(e -> {
+
+            if(button.getText().equals("Pause")) {
+                JOptionPane.showMessageDialog(this, "Please pause the simulation before adding a vehicle.", "Simulation Paused", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if(speedValue <= 0) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid speed value before adding a vehicle.", "Invalid Speed", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if(laneEntryValue < 1 || laneEntryValue > 4) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid lane entry value (1-4).", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if(s == null || spawnPos == null) {
+                JOptionPane.showMessageDialog(this, "Please set a valid lane before adding a vehicle.", "Invalid Lane", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Vehicle newVehicle = null;
+            
+            switch (selectedVehicle) {
+                case "Car":
+                    newVehicle = new Car(laneEntryOrientation, speedValue, 0, s, selectedCarLoad);
+                    break;
+                case "Moto":
+                    break;
+                case "Ambulance":
+                    break;
+                default: 
+                    return;
+            }
+            if (newVehicle != null) {
+                addVehicle(newVehicle, spawnPos);
+                System.out.println("Added vehicle");
+            }
+        });
+        
+        add(addVehicleButton);
+
         // creat a input for tickspeed
         JTextField tickInput = new JTextField("30", 5);
         tickInput.setLocation(10, 10);

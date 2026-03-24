@@ -20,31 +20,31 @@ public class TrafficSimulationApp extends JFrame {
         // create vehicle obeject
         SimulationPanel panel = new SimulationPanel(1000, 800);
 
-        // Road 1: South (Right)
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 6.0, 6.0, road1, Car_load.ONE_PERSON), new Coordinate(50, 450));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.0, 4.0, road1, Car_load.FOUR_PERSON), new Coordinate(-50, 450));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 5.5, 5.5, road1, Car_load.TWO_PERSON), new Coordinate(-150, 450));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 7.0, 7.0, road1, Car_load.ONE_PERSON), new Coordinate(-300, 450));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.5, 4.5, road1, Car_load.THREE_PERSON), new Coordinate(-450, 450));
+        // // Road 1: South (Right)
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 6.0, 6.0, road1, Car_load.ONE_PERSON), new Coordinate(50, 450));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.0, 4.0, road1, Car_load.FOUR_PERSON), new Coordinate(-50, 450));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 5.5, 5.5, road1, Car_load.TWO_PERSON), new Coordinate(-150, 450));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 7.0, 7.0, road1, Car_load.ONE_PERSON), new Coordinate(-300, 450));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.5, 4.5, road1, Car_load.THREE_PERSON), new Coordinate(-450, 450));
         
-        // Road 2: North (Left)
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 5.5, 5.5, road2, Car_load.THREE_PERSON), new Coordinate(950, 350));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 7.5, 7.5, road2, Car_load.ONE_PERSON), new Coordinate(1100, 350));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.2, 4.2, road2, Car_load.FOUR_PERSON), new Coordinate(1250, 350));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 6.8, 6.8, road2, Car_load.TWO_PERSON), new Coordinate(1400, 350));
-        panel.addVehicle(new Car(Orientation.HORIZONTAL, 5.0, 5.0, road2, Car_load.ONE_PERSON), new Coordinate(1550, 350));
+        // // Road 2: North (Left)
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 5.5, 5.5, road2, Car_load.THREE_PERSON), new Coordinate(950, 350));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 7.5, 7.5, road2, Car_load.ONE_PERSON), new Coordinate(1100, 350));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 4.2, 4.2, road2, Car_load.FOUR_PERSON), new Coordinate(1250, 350));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 6.8, 6.8, road2, Car_load.TWO_PERSON), new Coordinate(1400, 350));
+        // panel.addVehicle(new Car(Orientation.HORIZONTAL, 5.0, 5.0, road2, Car_load.ONE_PERSON), new Coordinate(1550, 350));
 
-        // Road 3: West (Up)
-        panel.addVehicle(new Car(Orientation.VERTICAL, 5.0, 5.0, road3, Car_load.FOUR_PERSON), new Coordinate(550, 750));
-        panel.addVehicle(new Car(Orientation.VERTICAL, 6.5, 6.5, road3, Car_load.TWO_PERSON), new Coordinate(550, 950));
-        panel.addVehicle(new Car(Orientation.VERTICAL, 4.8, 4.8, road3, Car_load.THREE_PERSON), new Coordinate(550, 1150));
-        panel.addVehicle(new Car(Orientation.VERTICAL, 7.2, 7.2, road3, Car_load.ONE_PERSON), new Coordinate(550, 1350));
+        // // Road 3: West (Up)
+        // panel.addVehicle(new Car(Orientation.VERTICAL, 5.0, 5.0, road3, Car_load.FOUR_PERSON), new Coordinate(550, 750));
+        // panel.addVehicle(new Car(Orientation.VERTICAL, 6.5, 6.5, road3, Car_load.TWO_PERSON), new Coordinate(550, 950));
+        // panel.addVehicle(new Car(Orientation.VERTICAL, 4.8, 4.8, road3, Car_load.THREE_PERSON), new Coordinate(550, 1150));
+        // panel.addVehicle(new Car(Orientation.VERTICAL, 7.2, 7.2, road3, Car_load.ONE_PERSON), new Coordinate(550, 1350));
 
-        // Road 4: East (Down)
-        panel.addVehicle(new Car(Orientation.VERTICAL, 4.5, 4.5, road4, Car_load.THREE_PERSON), new Coordinate(450, 50));
-        panel.addVehicle(new Car(Orientation.VERTICAL, 8.0, 8.0, road4, Car_load.ONE_PERSON), new Coordinate(450, -150));
-        panel.addVehicle(new Car(Orientation.VERTICAL, 5.2, 5.2, road4, Car_load.FOUR_PERSON), new Coordinate(450, -350));
-        panel.addVehicle(new Car(Orientation.VERTICAL, 6.0, 6.0, road4, Car_load.TWO_PERSON), new Coordinate(450, -550));
+        // // Road 4: East (Down)
+        // panel.addVehicle(new Car(Orientation.VERTICAL, 4.5, 4.5, road4, Car_load.THREE_PERSON), new Coordinate(450, 50));
+        // panel.addVehicle(new Car(Orientation.VERTICAL, 8.0, 8.0, road4, Car_load.ONE_PERSON), new Coordinate(450, -150));
+        // panel.addVehicle(new Car(Orientation.VERTICAL, 5.2, 5.2, road4, Car_load.FOUR_PERSON), new Coordinate(450, -350));
+        // panel.addVehicle(new Car(Orientation.VERTICAL, 6.0, 6.0, road4, Car_load.TWO_PERSON), new Coordinate(450, -550));
 
         // road 1 add ambulance
         //Orientation orientation, Approach approach, int x, int y, double speed, double curspeed, Road road) {
