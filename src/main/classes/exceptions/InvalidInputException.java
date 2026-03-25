@@ -8,6 +8,11 @@ public class InvalidInputException extends IllegalArgumentException{
     public InvalidInputException(String message) {
         super(message);
     }
+
+    public InvalidInputException(String message, Object value) {
+        super(message+" Invalid value: " + value);
+    }
+
     
     @Override
     public String getMessage() {
