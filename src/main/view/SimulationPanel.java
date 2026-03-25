@@ -55,10 +55,9 @@ public class SimulationPanel extends JPanel {
                                 && vehicles.get(v).getY() > 0 && vehicles.get(v).getY() <= 900);
                 
                 System.out.println("Stats [Frame " + frameCounter + "]: Emergency: " + emergencyCount + ", Cars: " + carCount);
-                System.out.println("every vehicles");
-                for (Vehicle v : vehicles.keySet()) {
-                    Coordinate pos = vehicles.get(v);
-                    System.out.println("Vehicle type: " + v.getClass().getSimpleName() + ", Position: (" + pos.getX() + ", " + pos.getY() + ")" + ", Speed: " + v.getCurspeed() + ", Road: " + v.getRoad().getApproach());
+                
+                for (Road r : roads.keySet()) {
+                    System.out.println("Road " + r.getApproach() + " stats: Inner: " + r.getInnerLaneVehicleCount() + ", Outer: " + r.getOuterLaneVehicleCount());
                 }
             }
         });
@@ -258,7 +257,10 @@ public class SimulationPanel extends JPanel {
             TrafficLight matchedLight = getTrafficlightToObey(v);
             Stopline matchedLine = getStoplineToObey(v);
 
-            if (!v.isEmergency() && !v.hasTurned() && matchedLight != null && matchedLine != null && matchedLight.getState() == LightState.RED) {
+            // Emergency vehicles only bypass stopline (ignore matchedLine check if emergency)
+            boolean shouldObeyStopline = !v.isEmergency();
+            
+            if (shouldObeyStopline && !v.hasTurned() && matchedLight != null && matchedLine != null && matchedLight.getState() == LightState.RED) {
                 Coordinate linePos = stoplines.get(matchedLine);
                 double distance = Math.hypot(linePos.getX() - pos.getX(), linePos.getY() - pos.getY());
                 if (distance <= stopDistance) stop = true;
@@ -268,17 +270,12 @@ public class SimulationPanel extends JPanel {
                 for (Vehicle other : vehicles.keySet()) {
                     if (v == other) continue;
                     Coordinate otherPos = vehicles.get(other);
-                    if (v.getRoad().getApproach() == other.getRoad().getApproach()) {
-                        if (isBehind(v, pos, other, otherPos) && Math.hypot(otherPos.getX() - pos.getX(), otherPos.getY() - pos.getY()) < 80) {
-                            if(v.isEmergency()) {
-                                if((v.getRoad().getApproach() == Approach.SOUTH || v.getRoad().getApproach() == Approach.NORTH) && !v.isOnPriorityRoad()) {
-                                    pos.setY(pos.getY() - 40);
-                                    v.setOnPriorityRoad(true);
-                                    System.out.println("Emergency vehicle on " + v.getRoad().getApproach() + " is moving to priority road." + v.isOnPriorityRoad());
-                                } else if ((v.getRoad().getApproach() == Approach.EAST || v.getRoad().getApproach() == Approach.WEST) && !v.isOnPriorityRoad()){
-                                    pos.setX(pos.getX() - 40);
-                                    v.setOnPriorityRoad(true);
-                                }
+                    if (v.getRoad().getApproach() == other.getRoad().getApproach() && v.getLaneType() == other.getLaneType()) {
+                        if (isBehind(v, pos, other, otherPos) && Math.hypot(otherPos.getX() - pos.getX(), otherPos.getY() - pos.getY()) < 100) {
+                            // Overtaking logic: if the vehicle in front is slow or we are blocked, try to switch to inner lane
+                            if (v.getLaneType() == LaneType.OUTER && isLaneSwitchSafe(v, LaneType.INNER)) {
+                                switchLane(v, pos, LaneType.INNER);
+                                System.out.println("Vehicle " + v.getId() + " is overtaking.");
                             } else {
                                 stop = true;
                             }
@@ -299,6 +296,64 @@ public class SimulationPanel extends JPanel {
 
             moveVehicle(v, pos, 1000, 800);
         }
+    }
+
+    private boolean isLaneSwitchSafe(Vehicle v, LaneType targetLane) {
+        Road road = v.getRoad();
+        
+        // 1. Balance check: consider half/half of the total vehicle on that road
+        // If switching would make target lane have significantly more than 50%
+        if (targetLane == LaneType.INNER) {
+            if (road.getInnerLaneVehicleCount() >= (road.getTotalVehicleCount() + 1) / 2) {
+                if (!v.isEmergency()) return false; 
+            }
+        } else {
+            if (road.getOuterLaneVehicleCount() >= (road.getTotalVehicleCount() + 1) / 2) {
+                if (!v.isEmergency()) return false;
+            }
+        }
+
+        // 2. Collision check: avoid overlapping with vehicles in the target lane
+        Coordinate myPos = vehicles.get(v);
+        double myNewX = myPos.getX();
+        double myNewY = myPos.getY();
+        double offset = 40;
+        Approach app = road.getApproach();
+
+        if (app == Approach.SOUTH) myNewY += (targetLane == LaneType.INNER ? -offset : offset);
+        else if (app == Approach.NORTH) myNewY += (targetLane == LaneType.INNER ? offset : -offset);
+        else if (app == Approach.WEST) myNewX += (targetLane == LaneType.INNER ? -offset : offset);
+        else if (app == Approach.EAST) myNewX += (targetLane == LaneType.INNER ? offset : -offset);
+
+        for (Vehicle other : vehicles.keySet()) {
+            if (v == other) continue;
+            // Check only vehicles on the same road approach and already in target lane
+            if (other.getRoad().getApproach() == road.getApproach() && other.getLaneType() == targetLane) {
+                Coordinate otherPos = vehicles.get(other);
+                // Safety distance check to avoid overlapping
+                if (Math.hypot(otherPos.getX() - myNewX, otherPos.getY() - myNewY) < 110) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+
+    private void switchLane(Vehicle v, Coordinate pos, LaneType targetLane) {
+        if (v.getLaneType() == targetLane) return;
+        
+        v.getRoad().decrementVehicleCount(v.getLaneType());
+        v.setLaneType(targetLane);
+        v.getRoad().incrementVehicleCount(targetLane);
+
+        Approach approach = v.getRoad().getApproach();
+        double offset = 40; // Shift by 40 units for inner lane
+        
+        if (approach == Approach.SOUTH) pos.setY(pos.getY() + (targetLane == LaneType.INNER ? -offset : offset));
+        else if (approach == Approach.NORTH) pos.setY(pos.getY() + (targetLane == LaneType.INNER ? offset : -offset));
+        else if (approach == Approach.WEST) pos.setX(pos.getX() + (targetLane == LaneType.INNER ? -offset : offset));
+        else if (approach == Approach.EAST) pos.setX(pos.getX() + (targetLane == LaneType.INNER ? offset : -offset));
     }
 
     private void updateTrafficLight(TrafficLight light, int deltaMs) {
@@ -365,13 +420,25 @@ public class SimulationPanel extends JPanel {
 
     private void resetVehicle(Vehicle v, Coordinate pos) {
         Coordinate spawn = vehicleSpawns.get(v);
+        
+        // Decrement count from old road
+        if (v.getRoad() != null) {
+            v.getRoad().decrementVehicleCount(v.getLaneType());
+        }
+
         pos.setX(spawn.getX());
         pos.setY(spawn.getY());
         v.setRoad(v.getOriginalRoad());
+        v.setLaneType(LaneType.OUTER);
+        
+        // Increment count on new (reset) road
+        if (v.getRoad() != null) {
+            v.getRoad().incrementVehicleCount(v.getLaneType());
+        }
+
         v.setOrientation((v.getRoad().getId() == 1 || v.getRoad().getId() == 2) ? Orientation.HORIZONTAL : Orientation.VERTICAL);
         v.setHasTurned(false);
         v.setTurning(false);
-        v.setOnPriorityRoad(false);
         v.setTurnDirection(TurnDirection.values()[new java.util.Random().nextInt(3)]);
     }
 
@@ -420,7 +487,11 @@ public class SimulationPanel extends JPanel {
         }
 
         if (targetRoad != null) {
+            // Update road counters when turning
+            v.getRoad().decrementVehicleCount(v.getLaneType());
             v.setRoad(targetRoad);
+            v.getRoad().incrementVehicleCount(v.getLaneType());
+
             v.setOrientation((targetRoad.getApproach() == Approach.NORTH || targetRoad.getApproach() == Approach.SOUTH) 
                                ? Orientation.HORIZONTAL : Orientation.VERTICAL);
             v.setTurnTargetCoord(targetCoord);
@@ -479,6 +550,9 @@ public class SimulationPanel extends JPanel {
     void addVehicle(Vehicle v, Coordinate pos) { 
         vehicles.put(v, new Coordinate(pos.getX(), pos.getY())); 
         vehicleSpawns.put(v, new Coordinate(pos.getX(), pos.getY()));
+        if (v.getRoad() != null) {
+            v.getRoad().incrementVehicleCount(v.getLaneType());
+        }
     }
     void addstopline(Stopline line, Coordinate pos) { stoplines.put(line, pos); }
 }

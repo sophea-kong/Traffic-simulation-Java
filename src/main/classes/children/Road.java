@@ -19,6 +19,9 @@ public class Road extends InanimatedObject implements Renderable {
     private int laneCount;
     private int stopLineOffset;
 
+    private int innerLaneVehicleCount = 0;
+    private int outerLaneVehicleCount = 0;
+
     private Color asphaltColor = new Color(60, 60, 60);
     private Color laneMark = new Color(255, 255, 255);
     private Color stopLineColor = new Color(255, 235, 235);
@@ -34,6 +37,20 @@ public class Road extends InanimatedObject implements Renderable {
         setLaneCount(laneCount);
         setStopLineOffset(stopLineOffset);
     }
+    
+    public void incrementVehicleCount(LaneType laneType) {
+        if (laneType == LaneType.INNER) innerLaneVehicleCount++;
+        else outerLaneVehicleCount++;
+    }
+
+    public void decrementVehicleCount(LaneType laneType) {
+        if (laneType == LaneType.INNER) innerLaneVehicleCount--;
+        else outerLaneVehicleCount--;
+    }
+
+    public int getInnerLaneVehicleCount() { return innerLaneVehicleCount; }
+    public int getOuterLaneVehicleCount() { return outerLaneVehicleCount; }
+    public int getTotalVehicleCount() { return innerLaneVehicleCount + outerLaneVehicleCount; }
     
 
     private void setStopLineOffset(int stopLineOffset) {

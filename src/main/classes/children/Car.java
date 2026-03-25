@@ -40,6 +40,11 @@ public class Car extends Vehicle {
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
+        } finally {
+            if (sprite == null) {
+                System.err.println("Failed to load car sprite.");
+                System.exit(1);
+            }
         }
     }
 
