@@ -24,7 +24,7 @@ public class SimulationPanel extends JPanel {
     private double speedValue = 1.0;
     private int laneEntryValue = 1;
     private Orientation laneEntryOrientation = Orientation.HORIZONTAL;
-    private Road s; // temporary variable to store the road for new vehicle
+    private Road roadSelected; // temporary variable to store the road for new vehicle
     private Coordinate spawnPos = new Coordinate(0, 0);
 
     public SimulationPanel(int windowWidth, int windowHeight) {
@@ -55,6 +55,11 @@ public class SimulationPanel extends JPanel {
                                 && vehicles.get(v).getY() > 0 && vehicles.get(v).getY() <= 900);
                 
                 System.out.println("Stats [Frame " + frameCounter + "]: Emergency: " + emergencyCount + ", Cars: " + carCount);
+                System.out.println("every vehicles");
+                for (Vehicle v : vehicles.keySet()) {
+                    Coordinate pos = vehicles.get(v);
+                    System.out.println("Vehicle type: " + v.getClass().getSimpleName() + ", Position: (" + pos.getX() + ", " + pos.getY() + ")" + ", Speed: " + v.getCurspeed() + ", Road: " + v.getRoad().getApproach());
+                }
             }
         });
 
@@ -107,16 +112,16 @@ public class SimulationPanel extends JPanel {
 
                 // road
                 if(laneEntryValue == 1) {
-                    s = findRoadByApproach(Approach.SOUTH);
+                    roadSelected = findRoadByApproach(Approach.SOUTH);
                     spawnPos = new Coordinate(-50, 450);
                 } else if (laneEntryValue == 2) {
-                    s = findRoadByApproach(Approach.NORTH);
+                    roadSelected = findRoadByApproach(Approach.NORTH);
                     spawnPos = new Coordinate(1550, 350);
                 } else if (laneEntryValue == 3) {
-                    s = findRoadByApproach(Approach.WEST);
+                    roadSelected = findRoadByApproach(Approach.WEST);
                     spawnPos = new Coordinate(550, 1350);
                 } else if (laneEntryValue == 4) {
-                    s = findRoadByApproach(Approach.EAST);
+                    roadSelected = findRoadByApproach(Approach.EAST);
                     spawnPos = new Coordinate(450, -550);
                 }
 
@@ -183,7 +188,7 @@ public class SimulationPanel extends JPanel {
                 return;
             }
 
-            if(s == null || spawnPos == null) {
+            if(roadSelected == null || spawnPos == null) {
                 JOptionPane.showMessageDialog(this, "Please set a valid lane before adding a vehicle.", "Invalid Lane", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -192,13 +197,13 @@ public class SimulationPanel extends JPanel {
             
             switch (selectedVehicle) {
                 case "Car":
-                    newVehicle = new Car(laneEntryOrientation, speedValue, 0, s, selectedCarLoad);
+                    newVehicle = new Car(laneEntryOrientation, speedValue, 0, roadSelected, selectedCarLoad);
                     break;
                 case "Moto":
-                    newVehicle = new Motorcycle(laneEntryOrientation, s.getApproach(), (int) spawnPos.getX(), (int) spawnPos.getY(), speedValue, 0, s);
+                    newVehicle = new Motorcycle(laneEntryOrientation, roadSelected.getApproach(), (int) spawnPos.getX(), (int) spawnPos.getY(), speedValue, 0, roadSelected);
                     break;
                 case "Ambulance":
-                    newVehicle = new Ambulance(laneEntryOrientation, s.getApproach(), (int) spawnPos.getX(), (int) spawnPos.getY(), speedValue, 0, s);
+                    newVehicle = new Ambulance(laneEntryOrientation, roadSelected.getApproach(), (int) spawnPos.getX(), (int) spawnPos.getY(), speedValue, 0, roadSelected);
                     break;
                 default: 
                     return;
@@ -206,6 +211,7 @@ public class SimulationPanel extends JPanel {
             if (newVehicle != null) {
                 addVehicle(newVehicle, spawnPos);
                 System.out.println("Added vehicle");
+                System.out.println("Vehicle type: " + selectedVehicle + ", Speed: " + speedValue + ", Lane: " + laneEntryValue);
             }
         });
         
