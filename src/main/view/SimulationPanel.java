@@ -2,7 +2,7 @@ package view;
 
 import parents.*;
 import children.*;
-import exceptions.TickSpeedException;
+import exceptions.InvalidInputException;
 import utils.*;
 import interfaces.*;
 import javax.swing.*;
@@ -218,11 +218,11 @@ public class SimulationPanel extends JPanel {
         tickInput.addActionListener(e -> {
             try {
                 int newDelay = Integer.parseInt(tickInput.getText());
-                if(newDelay > 200) {throw new TickSpeedException();}
+                if(newDelay > 200) {throw new InvalidInputException("Tick speed must be between 0 and 200 ms.");}
                 timer.setDelay(newDelay);
             } catch (NumberFormatException Ne) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid integer for tick speed.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
-            } catch (TickSpeedException Te) {
+            } catch (InvalidInputException Te) {
                 JOptionPane.showMessageDialog(this, Te.getMessage(), "Invalid Tick Speed", JOptionPane.ERROR_MESSAGE);
             } catch (IllegalArgumentException Ie) {
                 JOptionPane.showMessageDialog(this, Ie.getMessage(), "Invalid Input", JOptionPane.ERROR_MESSAGE);
