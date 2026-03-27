@@ -7,7 +7,17 @@ import utils.*;
 import interfaces.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -17,6 +27,10 @@ public class SimulationPanel extends JPanel {
     private Map<Vehicle, Coordinate> vehicles = new LinkedHashMap<>();
     private Map<Vehicle, Coordinate> vehicleSpawns = new LinkedHashMap<>();
     private Map<Stopline, Coordinate> stoplines = new LinkedHashMap<>();
+    private Vehicle latestAddedVehicle;
+    private Vehicle inspectedVehicle;
+    private final Map<Vehicle, String> vehicleStatuses = new HashMap<>();
+    private final Deque<String> eventLog = new LinkedList<>();
 
     private int frameCounter = 0;
     private String selectedVehicle = "Car";
@@ -26,10 +40,20 @@ public class SimulationPanel extends JPanel {
     private Orientation laneEntryOrientation = Orientation.HORIZONTAL;
     private Road roadSelected; // temporary variable to store the road for new vehicle
     private Coordinate spawnPos = new Coordinate(0, 0);
+    private boolean infoOverlayVisible = true;
+    private static final DecimalFormat SPEED_FORMAT = new DecimalFormat("0.0");
+    private static final int MAX_EVENT_LOG_SIZE = 6;
 
     public SimulationPanel(int windowWidth, int windowHeight) {
         setBackground(new Color(150, 150, 150)); 
         setPreferredSize(new Dimension(windowWidth, windowHeight));
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                inspectedVehicle = findVehicleAt(e.getX(), e.getY());
+                repaint();
+            }
+        });
 
 
         // lamda expression on timer
@@ -76,6 +100,14 @@ public class SimulationPanel extends JPanel {
             }
         });
         add(button);
+
+        JButton overlayToggleButton = new JButton("Hide Info");
+        overlayToggleButton.addActionListener(e -> {
+            infoOverlayVisible = !infoOverlayVisible;
+            overlayToggleButton.setText(infoOverlayVisible ? "Hide Info" : "Show Info");
+            repaint();
+        });
+        add(overlayToggleButton);
         
         // speed lane entry and exit
         JTextField speed = new JTextField(10);
@@ -212,6 +244,8 @@ public class SimulationPanel extends JPanel {
                 addVehicle(newVehicle, spawnPos);
                 System.out.println("Added vehicle");
                 System.out.println("Vehicle type: " + selectedVehicle + ", Speed: " + speedValue + ", Lane: " + laneEntryValue);
+                recordEvent("Added " + selectedVehicle + " #" + newVehicle.getId()
+                        + " to lane " + laneEntryValue + " at " + SPEED_FORMAT.format(speedValue));
             }
         });
         
@@ -298,6 +332,7 @@ public class SimulationPanel extends JPanel {
             }
 
             moveVehicle(v, pos, 1000, 800);
+            trackVehicleStatus(v);
         }
     }
 
@@ -373,6 +408,7 @@ public class SimulationPanel extends JPanel {
         v.setTurning(false);
         v.setOnPriorityRoad(false);
         v.setTurnDirection(TurnDirection.values()[new java.util.Random().nextInt(3)]);
+        recordEvent(v.getClass().getSimpleName() + " #" + v.getId() + " respawned on " + v.getRoad().getApproach());
     }
 
     private boolean isBehind(Vehicle v, Coordinate vPos, Vehicle other, Coordinate otherPos) {
@@ -453,7 +489,9 @@ public class SimulationPanel extends JPanel {
 
         for (Map.Entry<Vehicle, Coordinate> entry : vehicles.entrySet()) {
             entry.getKey().render(g2d, entry.getKey().getOrientation() == Orientation.VERTICAL, entry.getValue());
-        };    ;
+        };
+
+        drawVehicleInfoOverlay(g2d);
     }
 
     void countVehicles() {
@@ -479,6 +517,233 @@ public class SimulationPanel extends JPanel {
     void addVehicle(Vehicle v, Coordinate pos) { 
         vehicles.put(v, new Coordinate(pos.getX(), pos.getY())); 
         vehicleSpawns.put(v, new Coordinate(pos.getX(), pos.getY()));
+        latestAddedVehicle = v;
+        inspectedVehicle = v;
     }
     void addstopline(Stopline line, Coordinate pos) { stoplines.put(line, pos); }
+
+    private void drawVehicleInfoOverlay(Graphics2D g2d) {
+        if (!infoOverlayVisible) {
+            return;
+        }
+
+        int cardWidth = 340;
+        int cardHeight = 300;
+        int margin = 20;
+        int x = getWidth() - cardWidth - margin;
+        int y = getHeight() - cardHeight - margin;
+
+        Composite oldComposite = g2d.getComposite();
+        Color oldColor = g2d.getColor();
+        Font oldFont = g2d.getFont();
+
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.9f));
+        g2d.setColor(new Color(24, 28, 34));
+        g2d.fill(new RoundRectangle2D.Double(x, y, cardWidth, cardHeight, 24, 24));
+
+        g2d.setComposite(AlphaComposite.SrcOver);
+        g2d.setColor(new Color(74, 200, 255));
+        g2d.fillRoundRect(x + 16, y + 14, 104, 6, 6, 6);
+
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(oldFont.deriveFont(Font.BOLD, 18f));
+        g2d.drawString("Simulation Feed", x + 18, y + 38);
+
+        g2d.setFont(oldFont.deriveFont(Font.PLAIN, 12f));
+        g2d.setColor(new Color(210, 218, 230));
+        g2d.drawString("Vehicles on screen: " + vehicles.size(), x + 18, y + 58);
+        g2d.drawString("Click a vehicle to inspect it", x + 18, y + 74);
+        if (latestAddedVehicle != null && vehicles.containsKey(latestAddedVehicle)) {
+            g2d.setColor(new Color(255, 214, 102));
+            g2d.drawString("Recently added: " + latestAddedVehicle.getClass().getSimpleName()
+                    + " #" + latestAddedVehicle.getId(), x + 18, y + 90);
+        }
+
+        Vehicle focusVehicle = getFocusVehicle();
+        int textY = y + 114;
+        if (focusVehicle != null) {
+            g2d.setFont(oldFont.deriveFont(Font.BOLD, 13f));
+            g2d.setColor(new Color(255, 214, 102));
+            g2d.drawString(inspectedVehicle != null ? "Selected vehicle" : "Latest added", x + 18, textY);
+            textY += 18;
+
+            g2d.setFont(oldFont.deriveFont(Font.PLAIN, 12f));
+            g2d.setColor(new Color(240, 244, 247));
+            for (String line : buildVehicleSummary(focusVehicle, true)) {
+                g2d.drawString(line, x + 18, textY);
+                textY += 15;
+            }
+        }
+
+        textY += 8;
+        g2d.setFont(oldFont.deriveFont(Font.BOLD, 13f));
+        g2d.setColor(new Color(74, 200, 255));
+        g2d.drawString("Live status", x + 18, textY);
+        textY += 18;
+
+        g2d.setFont(oldFont.deriveFont(Font.PLAIN, 11f));
+        g2d.setColor(new Color(230, 236, 242));
+        for (String line : buildLiveVehicleRows()) {
+            g2d.drawString(line, x + 18, textY);
+            textY += 14;
+        }
+
+        textY += 8;
+        g2d.setFont(oldFont.deriveFont(Font.BOLD, 13f));
+        g2d.setColor(new Color(255, 214, 102));
+        g2d.drawString("Recent events", x + 18, textY);
+        textY += 18;
+
+        g2d.setFont(oldFont.deriveFont(Font.PLAIN, 11f));
+        g2d.setColor(new Color(230, 236, 242));
+        for (String event : eventLog) {
+            g2d.drawString(event, x + 18, textY);
+            textY += 14;
+        }
+
+        g2d.setFont(oldFont);
+        g2d.setColor(oldColor);
+        g2d.setComposite(oldComposite);
+    }
+
+    private List<String> buildVehicleSummary(Vehicle vehicle, boolean includeStatus) {
+        List<String> lines = new ArrayList<>();
+        Coordinate pos = vehicles.get(vehicle);
+        if (pos == null) {
+            return lines;
+        }
+
+        lines.add(vehicle.getClass().getSimpleName() + " #" + vehicle.getId()
+                + " | speed " + SPEED_FORMAT.format(vehicle.getCurspeed()) + "/" + SPEED_FORMAT.format(vehicle.getSpeed()));
+        lines.add("Road " + vehicle.getRoad().getId()
+                + " (" + vehicle.getRoad().getApproach() + ") | lane " + getLaneLabel(vehicle, pos));
+        lines.add("Position: (" + (int) pos.getX() + ", " + (int) pos.getY() + ")");
+
+        if (vehicle instanceof Car car) {
+            lines.add("Load: " + formatEnum(car.getLoad()));
+        } else if (vehicle.isEmergency()) {
+            lines.add("Priority mode: " + (vehicle.isOnPriorityRoad() ? "active" : "standby"));
+        } else {
+            lines.add("Turn: " + formatEnum(vehicle.getTurnDirection()));
+        }
+
+        if (includeStatus) {
+            lines.add("Status: " + buildVehicleStatus(vehicle));
+        }
+        return lines;
+    }
+
+    private List<String> buildLiveVehicleRows() {
+        List<Map.Entry<Vehicle, Coordinate>> sortedVehicles = new ArrayList<>(vehicles.entrySet());
+        sortedVehicles.sort(Comparator.comparingInt(entry -> entry.getKey().getId()));
+
+        List<String> rows = new ArrayList<>();
+        int limit = Math.min(5, sortedVehicles.size());
+        for (int i = 0; i < limit; i++) {
+            Vehicle vehicle = sortedVehicles.get(i).getKey();
+            Coordinate pos = sortedVehicles.get(i).getValue();
+            rows.add(vehicle.getClass().getSimpleName() + " #" + vehicle.getId()
+                    + " | lane " + getLaneLabel(vehicle, pos)
+                    + " | " + buildVehicleStatus(vehicle));
+        }
+
+        if (sortedVehicles.size() > limit) {
+            rows.add("... +" + (sortedVehicles.size() - limit) + " more vehicles active");
+        }
+        return rows;
+    }
+
+    private String buildVehicleStatus(Vehicle vehicle) {
+        if (vehicle.getCurspeed() == 0) {
+            return "stopped";
+        }
+        if (vehicle.isTurning()) {
+            return "turning " + formatEnum(vehicle.getTurnDirection());
+        }
+        if (vehicle.hasTurned()) {
+            return "after turn on " + vehicle.getRoad().getApproach();
+        }
+        return "moving on " + vehicle.getRoad().getApproach();
+    }
+
+    private String getLaneLabel(Vehicle vehicle, Coordinate pos) {
+        if (pos == null || vehicle.getRoad() == null) {
+            return "-";
+        }
+
+        Coordinate roadCenter = roads.get(vehicle.getRoad());
+        if (roadCenter == null) {
+            return "-";
+        }
+
+        Road road = vehicle.getRoad();
+        double axisStart;
+        double offset;
+
+        if (road.getOrientation() == Orientation.HORIZONTAL) {
+            axisStart = roadCenter.getY() - (road.getRoadWidth() / 2.0);
+            offset = pos.getY() + (vehicle.getheight() / 2.0) - axisStart;
+        } else {
+            axisStart = roadCenter.getX() - (road.getRoadWidth() / 2.0);
+            offset = pos.getX() + (vehicle.getwidth() / 2.0) - axisStart;
+        }
+
+        double laneWidth = road.getRoadWidth() / (double) road.getLaneCount();
+        int lane = (int) Math.floor(offset / laneWidth) + 1;
+        lane = Math.max(1, Math.min(lane, road.getLaneCount()));
+        return lane + "/" + road.getLaneCount();
+    }
+
+    private String formatEnum(Enum<?> value) {
+        return value.name().replace('_', ' ').toLowerCase();
+    }
+
+    private Vehicle getFocusVehicle() {
+        if (inspectedVehicle != null && vehicles.containsKey(inspectedVehicle)) {
+            return inspectedVehicle;
+        }
+        if (latestAddedVehicle != null && vehicles.containsKey(latestAddedVehicle)) {
+            return latestAddedVehicle;
+        }
+        return null;
+    }
+
+    private void trackVehicleStatus(Vehicle vehicle) {
+        String newStatus = buildVehicleStatus(vehicle);
+        String oldStatus = vehicleStatuses.put(vehicle, newStatus);
+        if (oldStatus == null || !oldStatus.equals(newStatus)) {
+            recordEvent(vehicle.getClass().getSimpleName() + " #" + vehicle.getId() + " " + newStatus);
+        }
+    }
+
+    private void recordEvent(String event) {
+        eventLog.addFirst(event);
+        while (eventLog.size() > MAX_EVENT_LOG_SIZE) {
+            eventLog.removeLast();
+        }
+    }
+
+    private Vehicle findVehicleAt(int x, int y) {
+        List<Map.Entry<Vehicle, Coordinate>> vehicleEntries = new ArrayList<>(vehicles.entrySet());
+        vehicleEntries.sort((left, right) -> Integer.compare(right.getKey().getId(), left.getKey().getId()));
+
+        for (Map.Entry<Vehicle, Coordinate> entry : vehicleEntries) {
+            Vehicle vehicle = entry.getKey();
+            Coordinate pos = entry.getValue();
+            Rectangle bounds = new Rectangle(
+                    (int) pos.getX(),
+                    (int) pos.getY(),
+                    vehicle.getwidth(),
+                    vehicle.getheight()
+            );
+
+            if (bounds.contains(x, y)) {
+                recordEvent("Inspecting " + vehicle.getClass().getSimpleName() + " #" + vehicle.getId());
+                return vehicle;
+            }
+        }
+
+        recordEvent("Cleared vehicle selection");
+        return null;
+    }
 }

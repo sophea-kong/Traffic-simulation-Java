@@ -78,6 +78,26 @@ public class Road extends InanimatedObject implements Renderable {
         return this.approach;
     }
 
+    public Orientation getOrientation() {
+        return this.orientation;
+    }
+
+    public int getLength() {
+        return this.length;
+    }
+
+    public int getRoadWidth() {
+        return this.roadWidth;
+    }
+
+    public int getLaneCount() {
+        return this.laneCount;
+    }
+
+    public int getStopLineOffset() {
+        return this.stopLineOffset;
+    }
+
     @Override
     public void render(Graphics2D g2d, boolean vertical, Coordinate pos) {
         // Draw road background
