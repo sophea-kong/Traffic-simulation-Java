@@ -9,8 +9,8 @@ import java.awt.geom.AffineTransform;
 
 public class Motorcycle extends Vehicle {
 
-    public Motorcycle(Orientation orientation, Approach approach, int x, int y, double speed, double curspeed, Road road) {
-        super(orientation, approach, x, y, 40, 20, speed * 1.2, curspeed, road);
+    public Motorcycle(Orientation orientation, Approach approach, double speed, double curspeed, Road road) {
+        super(orientation, approach, 40, 20, speed * 1.2, curspeed, road);
         loadSprite();
     }
 

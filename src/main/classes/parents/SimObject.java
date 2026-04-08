@@ -1,7 +1,6 @@
 package parents;
 
 
-
 public abstract class SimObject {
     protected int id;
     protected int height;

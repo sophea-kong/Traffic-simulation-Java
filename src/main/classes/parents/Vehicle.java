@@ -16,7 +16,6 @@ public abstract class Vehicle extends AnimatedObject{
     protected BufferedImage sprite;
 
 
-    private Coordinate spawnPosition;
     private Road road;
     private Road originalRoad;
     private TurnDirection turnDirection;
@@ -25,18 +24,22 @@ public abstract class Vehicle extends AnimatedObject{
     private LaneType laneType = LaneType.OUTER;
     private double turnTargetCoord = 0;
 
+    // Circular Turning Fields
+    private Coordinate turnCenter;
+    private double turnRadius;
+    private double currentTurnAngle;
+    private double targetTurnAngle;
+    private int turnDirectionFactor; // 1 for CCW, -1 for CW
+
     protected double currentAngle = 0;
     protected double targetAngle = 0;
-    protected Coordinate position;
     protected Approach approach;
     
 
-    public Vehicle(Orientation orientation, Approach approach, int x, int y, int width, int height, double speed, double curspeed, Road road) {
+    public Vehicle(Orientation orientation, Approach approach, int width, int height, double speed, double curspeed, Road road) {
         super(height, width, speed, curspeed);
         this.orientation = orientation;
         this.approach = approach;
-        this.position = new Coordinate(x, y);
-        this.spawnPosition = new Coordinate(x, y);
         setRoad(road);
         this.originalRoad = road;
         this.turnDirection = TurnDirection.values()[new Random().nextInt(3)];
@@ -48,12 +51,6 @@ public abstract class Vehicle extends AnimatedObject{
         this.road = road;
         this.originalRoad = road;
         this.approach = road.getApproach();
-        
-        // Spawn logic
-        double x = (road.getId() == 1) ? 500.0 : (road.getId() == 2) ? 600.0 : 500.0;
-        double y = (road.getId() == 1) ? 450.0 : (road.getId() == 2) ? 400.0 : (road.getId() == 3) ? 750.0 : 50.0;
-        this.position = new Coordinate(x, y);
-        this.spawnPosition = new Coordinate(x, y);
         this.turnDirection = TurnDirection.values()[new Random().nextInt(3)];
     }
 
@@ -66,10 +63,6 @@ public abstract class Vehicle extends AnimatedObject{
             case 3 -> Approach.WEST;
             default -> Approach.EAST;
         };
-        double x = (road.getId() == 1) ? 500.0 : (road.getId() == 2) ? 600.0 : 500.0;
-        double y = (road.getId() == 1) ? 450.0 : (road.getId() == 2) ? 400.0 : (road.getId() == 3) ? 750.0 : 50.0;
-        this.position = new Coordinate(x, y);
-        this.spawnPosition = new Coordinate(x, y);
         setRoad(road);
         this.originalRoad = road;
         this.turnDirection = TurnDirection.values()[new Random().nextInt(3)];
@@ -79,7 +72,6 @@ public abstract class Vehicle extends AnimatedObject{
 
     public abstract double getAccelerationRate();
 
-    public Coordinate getSpawnPosition() { return spawnPosition; }
     public Road getOriginalRoad() { return originalRoad; }
     public TurnDirection getTurnDirection() { return turnDirection; }
     public void setTurnDirection(TurnDirection turnDirection) { this.turnDirection = turnDirection; }
@@ -91,6 +83,19 @@ public abstract class Vehicle extends AnimatedObject{
     public void setTurnTargetCoord(double turnTargetCoord) { this.turnTargetCoord = turnTargetCoord; }
     public LaneType getLaneType() { return laneType; }
     public void setLaneType(LaneType laneType) { this.laneType = laneType; }
+    
+    // Circular Turn Getters/Setters
+    public Coordinate getTurnCenter() { return turnCenter; }
+    public void setTurnCenter(Coordinate turnCenter) { this.turnCenter = turnCenter; }
+    public double getTurnRadius() { return turnRadius; }
+    public void setTurnRadius(double turnRadius) { this.turnRadius = turnRadius; }
+    public double getCurrentTurnAngle() { return currentTurnAngle; }
+    public void setCurrentTurnAngle(double currentTurnAngle) { this.currentTurnAngle = currentTurnAngle; }
+    public double getTargetTurnAngle() { return targetTurnAngle; }
+    public void setTargetTurnAngle(double targetTurnAngle) { this.targetTurnAngle = targetTurnAngle; }
+    public int getTurnDirectionFactor() { return turnDirectionFactor; }
+    public void setTurnDirectionFactor(int turnDirectionFactor) { this.turnDirectionFactor = turnDirectionFactor; }
+
     public Road getRoad() { return road; }
     public void setRoad(Road road) { 
         this.road = road; 
@@ -108,7 +113,6 @@ public abstract class Vehicle extends AnimatedObject{
     
     @Override
     public void render(Graphics2D g2d, boolean vertical, Coordinate pos) {
-        this.position = pos; 
         if (sprite == null) return;
         AffineTransform old = g2d.getTransform();
 
@@ -155,7 +159,7 @@ public abstract class Vehicle extends AnimatedObject{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Vehicle vehicle = (Vehicle) o;
-        return hasTurned == vehicle.hasTurned && isTurning == vehicle.isTurning && laneType == vehicle.laneType && Double.compare(vehicle.turnTargetCoord, turnTargetCoord) == 0 && Double.compare(vehicle.currentAngle, currentAngle) == 0 && Double.compare(vehicle.targetAngle, targetAngle) == 0 && java.util.Objects.equals(spawnPosition, vehicle.spawnPosition) && java.util.Objects.equals(road, vehicle.road) && java.util.Objects.equals(originalRoad, vehicle.originalRoad) && turnDirection == vehicle.turnDirection && java.util.Objects.equals(position, vehicle.position) && approach == vehicle.approach;
+        return hasTurned == vehicle.hasTurned && isTurning == vehicle.isTurning && laneType == vehicle.laneType && Double.compare(vehicle.turnTargetCoord, turnTargetCoord) == 0 && Double.compare(vehicle.currentAngle, currentAngle) == 0 && Double.compare(vehicle.targetAngle, targetAngle) == 0 && java.util.Objects.equals(road, vehicle.road) && java.util.Objects.equals(originalRoad, vehicle.originalRoad) && turnDirection == vehicle.turnDirection && approach == vehicle.approach;
     }
 
     @Override
@@ -164,7 +168,6 @@ public abstract class Vehicle extends AnimatedObject{
                 "id=" + id +
                 ", height=" + height +
                 ", width=" + width +
-                ", spawnPosition=" + spawnPosition +
                 ", road=" + road +
                 ", turnDirection=" + turnDirection +
                 ", hasTurned=" + hasTurned +

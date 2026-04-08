@@ -33,7 +33,7 @@ public abstract class AnimatedObject extends SimObject implements Renderable, Up
     public Orientation getOrientation() { return this.orientation; }
     public void setOrientation(Orientation orientation) { this.orientation = orientation; }
 
-    public boolean canMoving() { return true; }
+    public boolean canMove() { return true; }
 
     @Override
     public boolean equals(Object o) {

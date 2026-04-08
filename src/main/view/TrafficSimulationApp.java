@@ -13,8 +13,8 @@ public class TrafficSimulationApp extends JFrame {
 
         // create road object
         Road road1 = new Road(Orientation.HORIZONTAL, Approach.SOUTH, 600, 200, 2, 200);
-        Road road2 = new Road(Orientation.HORIZONTAL, Approach.NORTH, 600, 200, 2, -200);
-        Road road3 = new Road(Orientation.VERTICAL, Approach.WEST, 500, 200, 2, -200);
+        Road road2 = new Road(Orientation.HORIZONTAL, Approach.NORTH, 600, 200, 2, -220);
+        Road road3 = new Road(Orientation.VERTICAL, Approach.WEST, 500, 200, 2, -220);
         Road road4 = new Road(Orientation.VERTICAL, Approach.EAST, 500, 200, 2, 200);
 
         // create vehicle obeject
@@ -47,13 +47,13 @@ public class TrafficSimulationApp extends JFrame {
         // panel.addVehicle(new Car(Orientation.VERTICAL, 6.0, 6.0, road4, Car_load.TWO_PERSON), new Coordinate(450, -550));
 
         // road 1 add ambulance
-        //Orientation orientation, Approach approach, int x, int y, double speed, double curspeed, Road road) {
-        panel.addVehicle(new Ambulance(Orientation.HORIZONTAL, Approach.SOUTH, -600, 450, 8.0, 8.0, road1), new Coordinate(-600, 450));
+        //Orientation orientation, Approach approach, double speed, double curspeed, Road road) {
+        panel.addVehicle(new Ambulance(Orientation.HORIZONTAL, Approach.SOUTH, 8.0, 8.0, road1), new Coordinate(-600, 450));
 
         // Add motorcycle to road 2
-        panel.addVehicle(new Motorcycle(Orientation.HORIZONTAL, Approach.NORTH, 1650, 350, 7.0, 7.0, road2), new Coordinate(1650, 350));
+        panel.addVehicle(new Motorcycle(Orientation.HORIZONTAL, Approach.NORTH, 7.0, 7.0, road2), new Coordinate(1650, 320));
 
-        // Synchronized Timings
+        // WNSE pattern: 1 green, 3 red, then switch
         TrafficLight light1 = new TrafficLight(road1, LightState.GREEN, 7000, 2000, 9000);
         TrafficLight light2 = new TrafficLight(road2, LightState.GREEN, 7000, 2000, 9000);
         TrafficLight light3 = new TrafficLight(road3, LightState.RED, 7000, 2000, 9000);

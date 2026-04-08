@@ -10,8 +10,8 @@ import java.awt.geom.AffineTransform;
 public class Ambulance extends Vehicle {
     private long sirenTimer = 0;
 
-    public Ambulance(Orientation orientation, Approach approach, int x, int y, double speed, double curspeed, Road road) {
-        super(orientation, approach, x, y, 60, 30, speed * 1.5, curspeed, road); 
+    public Ambulance(Orientation orientation, Approach approach, double speed, double curspeed, Road road) {
+        super(orientation, approach, 60, 30, speed * 1.5, curspeed, road); 
         loadSprite();
     }
 

@@ -1,9 +1,17 @@
-Road class
+SimObject : abstract class
+ + id, width , height.
 
-feild : 
-    int cy, cx : coordinate of the center of the Road.
-    Orietation : axis of the road; Hozi/verti
-    approach : direction of the road WNSE
-    length : the road length (height). depend on the Orietation
-    roadWidth : the width of the road.
-    stoplineOffset : the offset of the stop line from the middle of the road.
+Animated object : child of SimObject
+ + speed, curspeed, Orietation
+ + all getter. and sette
+
+inAnimatedObject < SimObject
+ + isInteractable, isCollidable
+ 
+vehicles < AnimatedObject:
+ + Road : the road that the vehicles it belong to
+ + Original Road : after perform turn the road field is changed to it's new road,  To restore it back to original road we iuse this feidl.
+ + turn direction : a value to know which direction it's going to turn to(left right or forward.)
+
+Car < vehicles:
+ + 
